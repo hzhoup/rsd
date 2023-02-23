@@ -43,10 +43,12 @@ export function configUnocss() {
     rules: [[/^wh-(\d+)$/, ([, num]) => ({ width: `${num}px`, height: `${num}px` })]],
     theme: {
       colors: {
-        primary: '#1890ff'
+        primary: '#1890ff',
+        hover_dark: '#242424'
       },
       backgroundColor: {
-        primary: '#1890ff'
+        primary: '#1890ff',
+        hover_dark: '#242424'
       }
     }
   })

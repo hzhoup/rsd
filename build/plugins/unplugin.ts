@@ -18,7 +18,7 @@ export function configUnPlugins() {
           customCollections: ['custom']
         })
       ],
-      dirs: ['src/modules'],
+      dirs: ['src/components'],
       extensions: ['vue', 'tsx'],
       dts: 'types/modules.d.ts'
     })

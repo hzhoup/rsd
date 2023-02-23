@@ -1,3 +1,4 @@
+import { PageNameEnum } from '@/enum/page'
 import { router as globalRouter } from '@/router'
 import type { RouteLocationRaw } from 'vue-router'
 
@@ -29,5 +30,9 @@ export function useRouterPush(inSetup = true) {
     router.go(-1)
   }
 
-  return { routerPush, routerBack }
+  function goHome() {
+    routerPush({ name: PageNameEnum.HOME_NAME })
+  }
+
+  return { routerPush, routerBack, goHome }
 }
