@@ -27,6 +27,8 @@ declare module '@vue/runtime-core' {
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
+    BasicButton: typeof import('./../src/components/Button/src/BasicButton.vue')['default']
+    BasicForm: typeof import('./../src/components/Form/BasicForm.vue')['default']
     HoverContainer: typeof import('./../src/components/Application/HoverContainer.vue')['default']
     IconAntDesignFullscreenExitOutlined: typeof import('~icons/ant-design/fullscreen-exit-outlined')['default']
     IconAntDesignFullscreenOutlined: typeof import('~icons/ant-design/fullscreen-outlined')['default']

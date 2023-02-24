@@ -38,7 +38,8 @@ export default defineComponent({
       default: false
     },
     background: {
-      type: String as PropType<string>
+      type: String as PropType<string>,
+      default: ''
     }
   }
 })
