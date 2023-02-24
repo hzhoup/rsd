@@ -8,6 +8,7 @@ import type { RouteLocationRaw } from 'vue-router'
  */
 export function useRouterPush(inSetup = true) {
   const router = inSetup ? useRouter() : globalRouter
+  const route = router.currentRoute
 
   /**
    * 路由跳转
@@ -34,5 +35,5 @@ export function useRouterPush(inSetup = true) {
     routerPush({ name: PageNameEnum.HOME_NAME })
   }
 
-  return { routerPush, routerBack, goHome }
+  return { route, routerPush, routerBack, goHome }
 }

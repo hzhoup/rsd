@@ -21,6 +21,9 @@ export async function createDynamicRoute(
       }
       return false
     }
+
+    await userStore.afterLogin()
+
     if (to.name === PageNameEnum.PAGE_NOT_FOUND_NAME) {
       const path = to.redirectedFrom?.name === PageNameEnum.HOME_NAME ? '/' : to.fullPath
       next({ path, replace: true, query: to.query, hash: to.hash })

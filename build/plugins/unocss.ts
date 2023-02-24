@@ -44,11 +44,8 @@ export function configUnocss() {
     theme: {
       colors: {
         primary: '#1890ff',
-        hover_dark: '#242424'
-      },
-      backgroundColor: {
-        primary: '#1890ff',
-        hover_dark: '#242424'
+        hover_dark: '#242424',
+        hover_light: '#F3F3F5FF'
       }
     }
   })

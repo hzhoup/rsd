@@ -3,14 +3,14 @@ import { useUserStoreWithOut } from '@/store/modules/user'
 import { Modal, notification } from 'ant-design-vue'
 import NProgress from 'nprogress'
 import type { Router } from 'vue-router'
+import { createPermissionGuard } from './permissionGuard'
 
 export function createRouterGuard(router: Router) {
   createPageLoadingGuard(router)
   createMessageGuard(router)
   createProgressGuard(router)
   createHtmlTitleGuard(router)
-  // TODO 消除注释
-  // createPermissionGuard(router)
+  createPermissionGuard(router)
 }
 
 // 页面加载 loading
@@ -20,13 +20,13 @@ function createPageLoadingGuard(router: Router) {
 
   router.beforeEach(() => {
     if (!userStore.token) return true
-    appStore.togglePageLoading?.()
+    appStore.setPageLoadingAction(true)
     return true
   })
   router.afterEach(() => {
     if (!userStore.token) return true
     setTimeout(() => {
-      appStore?.togglePageLoading?.()
+      appStore.pageLoading = false
     }, 150)
     return true
   })

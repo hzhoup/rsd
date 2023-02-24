@@ -8,6 +8,7 @@
     <Spin :size="size" :spinning="loading" :tip="tip" v-bind="$attrs" />
   </section>
 </template>
+
 <script lang="ts">
 import { Spin } from 'ant-design-vue'
 import type { SpinSize } from 'ant-design-vue/es/spin/Spin'
@@ -37,12 +38,12 @@ export default defineComponent({
       default: false
     },
     background: {
-      type: String as PropType<string>,
-      default: 'none'
+      type: String as PropType<string>
     }
   }
 })
 </script>
+
 <style lang="less" scoped>
 .full-loading {
   position: fixed;
@@ -54,7 +55,6 @@ export default defineComponent({
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: rgb(240 242 245 / 40%);
 
   &.absolute {
     position: absolute;

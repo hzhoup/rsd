@@ -6,7 +6,7 @@ export enum PageNameEnum {
 }
 
 export enum PagePathEnum {
-  'HOME_REDIRECT' = '/dashboard/workplace',
+  'HOME_REDIRECT' = '/sys/userManage',
   'LOGIN_PATH' = '/login',
   'REDIRECT_PATH' = '/redirect'
 }

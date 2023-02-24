@@ -24,7 +24,10 @@ export function resultPageSuccess<T = any>(pageNo: number, pageSize: number, lis
   }
 }
 
-export function resultError(errorMessage = 'Request failed', { errorCode = -1, data = null } = {}) {
+export function resultError(
+  errorMessage = 'Request failed',
+  { errorCode = '500', data = null } = {}
+) {
   return {
     data,
     errorCode,

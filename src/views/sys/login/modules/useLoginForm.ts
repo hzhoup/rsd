@@ -1,15 +1,10 @@
-import { useMessage } from '@/hooks/useMessage'
 import { usePost } from '@/hooks/useRequest'
+import { useRouterPush } from '@/hooks/useRouterPush'
 import { useUserStore } from '@/store/modules/user'
 import { Ref } from 'vue'
 
-const { createErrorModal } = useMessage()
 const userStore = useUserStore()
-
-interface LoginResult {
-  token: string
-  companyId: number
-}
+const { route, routerPush } = useRouterPush()
 
 export function useLoginForm(formRef: Ref<any>) {
   const formData = reactive({
@@ -23,7 +18,7 @@ export function useLoginForm(formRef: Ref<any>) {
       { min: 6, max: 16, message: '密码长度在6到16位之间', trigger: 'change' }
     ]
   })
-  const { execute, data, error, isFetching } = usePost<LoginResult>('/user/login', formData)
+  const { execute, data, isFetching } = usePost<string>('/user/login', formData)
 
   async function validForm() {
     const form = unref(formRef)
@@ -35,13 +30,11 @@ export function useLoginForm(formRef: Ref<any>) {
     const validInfo = await validForm()
     if (!validInfo) return
     await execute()
-    if (error.value) {
-      createErrorModal({
-        title: '错误提示',
-        content: (error.value as unknown as Error).message || '网络错误，请联系管理员'
-      })
-    } else {
-      await userStore.afterLogin(data.value?.token)
+    if (data.value) {
+      userStore.token = data.value
+      await userStore.afterLogin()
+      const { redirect } = route.value.query
+      await routerPush({ path: (redirect as string) || '/' })
     }
   }
 

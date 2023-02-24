@@ -16,7 +16,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
 
   plugins.push(...configUnPlugins())
 
-  VITE_MOCK && configMock(isBuild)
+  VITE_MOCK && plugins.push(configMock(isBuild))
 
   return plugins
 }

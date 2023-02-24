@@ -22,7 +22,7 @@ const useRequest = createFetch({
       })
       return { options }
     },
-    afterFetch({ data, response }) {
+    async afterFetch({ data, response }) {
       const userStore = useUserStoreWithOut()
       const status = data.errorCode
 
@@ -30,13 +30,13 @@ const useRequest = createFetch({
         data = data.data || {}
       } else if (status === '401') {
         userStore.token = null
-        createMessage.warning(data.errorMessage || '登陆已经过期')
+        createMessage.error(data.errorMessage || '登陆已过期,请重新登录')
         setTimeout(() => {
           routerPush({ name: PageNameEnum.LOGIN_NAME })
         }, 1500)
         data = null
       } else {
-        createMessage.warning(data.errorMessage || '网络请求错误,请联系管理员!')
+        createMessage.error(data.errorMessage || '网络请求错误,请联系管理员!')
         data = null
       }
 
