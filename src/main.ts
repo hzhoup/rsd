@@ -1,5 +1,6 @@
 import AppLoad from '@/AppLoad.vue'
 import { setupAssets } from '@/assets'
+import { setupVxeTable } from '@/components/VxeTable'
 import { setupGlobDirectives } from '@/directives'
 import { setupRouter } from '@/router'
 import { setupStore } from '@/store'
@@ -21,6 +22,8 @@ async function boostrap() {
   await setupRouter(app)
 
   setupGlobDirectives(app)
+
+  setupVxeTable(app)
 
   app.mount('#app')
 }

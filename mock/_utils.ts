@@ -16,8 +16,8 @@ export function resultPageSuccess<T = any>(pageNo: number, pageSize: number, lis
   return {
     ...resultSuccess({
       data: pageData,
-      pageNo,
-      pageSize,
+      pageNo: +pageNo,
+      pageSize: +pageSize,
       totalCount: list.length,
       totalPage: Math.ceil(list.length / pageSize)
     })

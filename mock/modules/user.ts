@@ -1,3 +1,5 @@
+import { Random } from 'mockjs'
+
 export const userList = [
   {
     userName: 'admin',
@@ -62,3 +64,34 @@ export const userInfo = {
     position: null
   }
 }
+
+export const userTables = (() => {
+  const result: any[] = []
+  const len = Random.integer(10, 50)
+
+  for (let i = 0; i < len; i++) {
+    result.push({
+      id: `${i + 1}`,
+      userName: '@first()',
+      realName: '@cname()',
+      enumber: '@integer(11, 11)',
+      tel: '@integer(11, 11)',
+      position: '@ctitle(2)',
+      remark: null,
+      deptName: '@ctitle(10)',
+      depId: '580973429',
+      deptIdArrStr: '580973429',
+      deptIdArr: ['580973429'],
+      dingUserId: null,
+      unionid: null,
+      roleId: null,
+      'status|1': [0, 1],
+      serviceDeptIds: null,
+      serviceDeptNames: null,
+      mtypes: '1',
+      relatedPermissions: '@ctitle(8)'
+    })
+  }
+
+  return result
+})()

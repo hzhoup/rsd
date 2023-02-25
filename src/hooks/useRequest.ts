@@ -3,6 +3,7 @@ import { useRouterPush } from '@/hooks/useRouterPush'
 import { useUserStoreWithOut } from '@/store/modules/user'
 import { isDevMode } from '@/utils/common/env'
 import { createFetch, isObject, MaybeRef, UseFetchReturn } from '@vueuse/core'
+import { isNil, pickBy } from 'lodash-es'
 import { computed, unref } from 'vue'
 import { LocationQueryRaw, stringifyQuery } from 'vue-router'
 import { useMessage } from './useMessage'
@@ -67,7 +68,9 @@ export function useGet<T = unknown>(
   const _url = computed(() => {
     const _url = unref(url)
     const _query = unref(query)
-    const queryString = isObject(_query) ? stringifyQuery(_query as LocationQueryRaw) : _query || ''
+    const queryString = isObject(_query)
+      ? stringifyQuery(pickBy(_query, value => !isNil(value) && value !== '') as LocationQueryRaw)
+      : _query || ''
     return `${_url}${queryString ? '?' : ''}${queryString}`
   })
 
@@ -83,7 +86,8 @@ export function usePost<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  return useRequest<T>(url).post(payload).json()
+  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  return useRequest<T>(url).post(params).json()
 }
 
 /**
@@ -95,7 +99,8 @@ export function usePut<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  return useRequest<T>(url).put(payload).json()
+  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  return useRequest<T>(url).put(params).json()
 }
 
 /**
@@ -107,7 +112,8 @@ export function useDelete<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  return useRequest<T>(url).delete(payload).json()
+  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  return useRequest<T>(url).delete(params).json()
 }
 
 /**

@@ -3,7 +3,7 @@
     <LayoutHeader />
     <a-layout>
       <LayoutSideBar />
-      <a-layout-content class="min-h-[calc(100vh-48px)]">
+      <a-layout-content>
         <AppContent />
       </a-layout-content>
     </a-layout>

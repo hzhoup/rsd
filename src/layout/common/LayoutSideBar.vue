@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-y-center transition-all duration-250 ease">
+  <div class="flex items-stretch transition-all duration-250 ease">
     <a-layout-sider
       v-model:collapsed="collapsed"
       class="!bg-white min-h-[calc(100vh-48px)]"
