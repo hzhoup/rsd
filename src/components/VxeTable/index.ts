@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { Column, Grid, Icon, Table, VXETable } from 'vxe-table'
+import { Column, Grid, Icon, Pager, Table, VXETable } from 'vxe-table'
 import zhCN from 'vxe-table/es/locale/lang/zh-CN'
 import 'xe-utils'
 import XEUtils from 'xe-utils'
@@ -26,7 +26,7 @@ export function setupVxeTable(app: App) {
     .use(Grid)
     // .use(Tooltip)
     // .use(Toolbar)
-    // .use(Pager)
+    .use(Pager)
     // .use(Form)
     // .use(FormItem)
     // .use(FormGather)

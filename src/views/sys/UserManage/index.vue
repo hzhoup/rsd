@@ -1,5 +1,6 @@
 <template>
   <a-card>
+    <FetchTable url="/user/getList"></FetchTable>
     <a-table
       :data-source="list"
       :loading="loading"
