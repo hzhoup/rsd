@@ -7,7 +7,7 @@ import {
   resultPageSuccess,
   resultSuccess
 } from '../_utils'
-import { userInfo, userList, userTables } from '../modules/user'
+import { roleList, userInfo, userList, userTables } from '../modules/user'
 
 export default [
   {
@@ -16,6 +16,7 @@ export default [
     method: 'post',
     response: ({ body }) => {
       const { userName, password } = body
+      console.log(userName, password)
       const checkUser = userList.find(
         user => user.userName === userName && user.password === password
       )
@@ -43,6 +44,57 @@ export default [
       if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
       const { pageNo = 1, pageSize = 10 } = request.query
       return resultPageSuccess(pageNo, pageSize, userTables)
+    }
+  },
+  {
+    url: '/api/user/editStatus',
+    timeout: Random.integer(200, 1000),
+    method: 'get',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      return resultSuccess(true)
+    }
+  },
+  {
+    url: '/api/user/resetPassword',
+    timeout: Random.integer(200, 1000),
+    method: 'post',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      return resultSuccess(true)
+    }
+  },
+  {
+    url: '/api/user/addUser',
+    timeout: Random.integer(200, 1000),
+    method: 'post',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      return resultSuccess(true)
+    }
+  },
+  {
+    url: '/api/user/updateUser',
+    timeout: Random.integer(200, 1000),
+    method: 'post',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      return resultSuccess(true)
+    }
+  },
+  {
+    url: '/api/role/getAppRoleList',
+    timeout: Random.integer(200, 1000),
+    method: 'get',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      const { pageNo = 1, pageSize = 10 } = request.query
+      return resultPageSuccess(pageNo, pageSize, roleList)
     }
   }
 ] as MockMethod[]

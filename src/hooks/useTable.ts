@@ -1,10 +1,13 @@
 import { useGet } from '@/hooks/useRequest'
 import type { MaybeRef } from '@vueuse/core'
 import { TableProps } from 'ant-design-vue'
+import { Key } from 'ant-design-vue/es/table/interface'
+import { TableRowSelection } from 'ant-design-vue/lib/table/interface'
 
 interface UseTableParams {
   url: string
   params?: MaybeRef<Recordable>
+  el?: MaybeRef<HTMLElement | null>
 }
 
 interface TableResult {
@@ -15,7 +18,7 @@ interface TableResult {
   totalPage: number
 }
 
-export function useTable({ url, params }: UseTableParams) {
+export function useTable({ url, params, el }: UseTableParams) {
   const list = ref<Recordable[]>([])
   const sort = ref({
     field: '',
@@ -31,6 +34,8 @@ export function useTable({ url, params }: UseTableParams) {
     showSizeChanger: true,
     showTotal: total => `共 ${total} 条数据`
   })
+  const selectedRowKeys = ref<Key[]>([])
+  const selectedRows = ref<Recordable[]>([])
 
   const query = computed(() => ({
     ...unref(params),
@@ -66,5 +71,33 @@ export function useTable({ url, params }: UseTableParams) {
     await execute()
   }
 
-  return { loading: isFetching, pagination, list, handleTableChange }
+  const onSelectChange: TableRowSelection['onChange'] = (rowKeys, rows) => {
+    selectedRowKeys.value = rowKeys
+    selectedRows.value = rows
+  }
+
+  // 刷新
+  async function refresh(flag = false) {
+    if (flag) {
+      pagination.value.current = 1
+      await execute()
+    } else {
+      await execute()
+    }
+  }
+
+  // 全屏
+  const { toggle: toggleFullscreen } = useFullscreen(el)
+
+  return {
+    loading: isFetching,
+    pagination,
+    list,
+    selectedRows,
+    selectedRowKeys,
+    toggleFullscreen,
+    refresh,
+    handleTableChange,
+    onSelectChange
+  }
 }

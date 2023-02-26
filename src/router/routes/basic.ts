@@ -10,8 +10,7 @@ import { RouteRecordRaw } from 'vue-router'
 
 export const PageNotFoundRoute: RouteRecordRaw = {
   path: '/:path(.*)*',
-  name: `${PageNameEnum.PAGE_NOT_FOUND_NAME}-parent`,
-  component: BLANK_LAYOUT,
+  component: BASIC_LAYOUT,
   children: [
     {
       path: '/:path(.*)*',

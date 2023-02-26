@@ -15,6 +15,7 @@ export function configUnPlugins() {
         AntDesignVueResolver({ importStyle: 'less' }),
         iconsResolver({
           prefix: 'icon',
+          alias: { 'park-outline': 'icon-park-outline' },
           customCollections: ['custom']
         })
       ],

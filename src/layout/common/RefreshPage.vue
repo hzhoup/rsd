@@ -13,10 +13,8 @@ import { useAppStore } from '@/store/modules/app'
 const appStore = useAppStore()
 
 function handleRefresh() {
-  appStore.setPageLoadingAction(true)
   appStore.reloadPage()
   setTimeout(() => {
-    appStore.pageLoading = false
     appStore.reloadFlag = false
   }, 800)
 }

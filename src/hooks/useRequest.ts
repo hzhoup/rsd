@@ -86,7 +86,9 @@ export function usePost<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  const params = computed(() => {
+    return pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  })
   return useRequest<T>(url).post(params).json()
 }
 
@@ -99,7 +101,9 @@ export function usePut<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  const params = computed(() => {
+    return pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  })
   return useRequest<T>(url).put(params).json()
 }
 
@@ -112,7 +116,9 @@ export function useDelete<T = unknown>(
   url: MaybeRef<string>,
   payload?: MaybeRef<unknown>
 ): UseFetchReturn<T> {
-  const params = pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  const params = computed(() => {
+    return pickBy(payload as Recordable, value => !isNil(value) && value !== '')
+  })
   return useRequest<T>(url).delete(params).json()
 }
 

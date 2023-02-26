@@ -1,12 +1,13 @@
 import { usePost } from '@/hooks/useRequest'
 import { useRouterPush } from '@/hooks/useRouterPush'
 import { useUserStore } from '@/store/modules/user'
+import type { FormInstance } from 'ant-design-vue'
 import { Ref } from 'vue'
 
 const userStore = useUserStore()
-const { route, routerPush } = useRouterPush()
+const { route, routerPush } = useRouterPush(false)
 
-export function useLoginForm(formRef: Ref<any>) {
+export function useLoginForm(formRef: Ref<FormInstance>) {
   const formData = reactive({
     userName: '',
     password: ''

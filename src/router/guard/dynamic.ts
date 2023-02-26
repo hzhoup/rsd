@@ -32,7 +32,7 @@ export async function createDynamicRoute(
   }
 
   if (to.name === PageNameEnum.PAGE_NOT_FOUND_NAME) {
-    next({ name: PageNameEnum.PAGE_NOT_FOUND_NAME, replace: true })
+    next()
     return false
   }
 

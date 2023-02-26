@@ -14,13 +14,19 @@
     <a-menu-item
       :key="menu.url"
       :class="[theme === 'dark' ? '!hover:bg-hover_dark' : '!hover:bg-hover_light']"
+      class="!flex-y-center"
     >
-      {{ menu.name }}
+      <template v-if="menu.icon" #icon>
+        <component :is="MenuIconList[menu.icon]" />
+      </template>
+      <span>{{ menu.name }}</span>
     </a-menu-item>
   </template>
 </template>
 
 <script lang="ts" setup>
+import MenuIconList from './icons'
+
 defineProps({
   menu: {
     type: Object,

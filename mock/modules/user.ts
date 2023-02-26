@@ -14,7 +14,7 @@ export const userInfo = {
       id: 1,
       parentId: -1,
       name: '系统管理',
-      icon: 'sys',
+      icon: 'setting',
       url: '/sys',
       perms: 'sys',
       seq: 1,
@@ -26,10 +26,22 @@ export const userInfo = {
       id: 2,
       parentId: 1,
       name: '用户管理',
-      icon: 'user',
+      icon: 'people',
       url: '/sys/UserManage',
       perms: 'user',
       seq: 1,
+      level: 1,
+      type: 1,
+      menuType: 0
+    },
+    {
+      id: 3,
+      parentId: 1,
+      name: '角色管理',
+      icon: 'permissions',
+      url: '/sys/RoleManage',
+      perms: 'role',
+      seq: 2,
       level: 1,
       type: 1,
       menuType: 0
@@ -75,9 +87,9 @@ export const userTables = (() => {
       userName: '@first()',
       realName: '@cname()',
       enumber: '@integer(11, 11)',
-      tel: '@integer(11, 11)',
+      tel: '@string("number", 11)',
       position: '@ctitle(2)',
-      remark: null,
+      remark: '@cparagraph(1, 3)',
       deptName: '@ctitle(10)',
       depId: '580973429',
       deptIdArrStr: '580973429',
@@ -90,6 +102,23 @@ export const userTables = (() => {
       serviceDeptNames: null,
       mtypes: '1',
       relatedPermissions: '@ctitle(8)'
+    })
+  }
+
+  return result
+})()
+
+export const roleList = (() => {
+  const result: any[] = []
+  const len = Random.integer(10, 50)
+
+  for (let i = 0; i < len; i++) {
+    result.push({
+      id: `${i + 1}`,
+      roleName: '@cname()',
+      remark: '@cparagraph(1, 3)',
+      creatorName: '@cname()',
+      createTime: '@date("YYYY-MM-DD HH:mm:ss")'
     })
   }
 
