@@ -45,6 +45,30 @@ export const userInfo = {
       level: 1,
       type: 1,
       menuType: 0
+    },
+    {
+      id: 4,
+      parentId: 1,
+      name: '菜单管理',
+      icon: 'applicationMenu',
+      url: '/sys/MenuManage',
+      perms: 'role',
+      seq: 3,
+      level: 1,
+      type: 1,
+      menuType: 0
+    },
+    {
+      id: 5,
+      parentId: 1,
+      name: '组织管理',
+      icon: 'level',
+      url: '/sys/DeptManage',
+      perms: 'role',
+      seq: 3,
+      level: 1,
+      type: 1,
+      menuType: 0
     }
   ],
   user: {
@@ -86,39 +110,14 @@ export const userTables = (() => {
       id: `${i + 1}`,
       userName: '@first()',
       realName: '@cname()',
-      enumber: '@integer(11, 11)',
+      password: '@integer(11, 11)',
+      'gender|1': [0, 1, 2],
       tel: '@string("number", 11)',
       position: '@ctitle(2)',
-      remark: '@cparagraph(1, 3)',
-      deptName: '@ctitle(10)',
-      depId: '580973429',
-      deptIdArrStr: '580973429',
-      deptIdArr: ['580973429'],
-      dingUserId: null,
-      unionid: null,
-      roleId: null,
       'status|1': [0, 1],
-      serviceDeptIds: null,
-      serviceDeptNames: null,
-      mtypes: '1',
-      relatedPermissions: '@ctitle(8)'
-    })
-  }
-
-  return result
-})()
-
-export const roleList = (() => {
-  const result: any[] = []
-  const len = Random.integer(10, 50)
-
-  for (let i = 0; i < len; i++) {
-    result.push({
-      id: `${i + 1}`,
-      roleName: '@cname()',
-      remark: '@cparagraph(1, 3)',
-      creatorName: '@cname()',
-      createTime: '@date("YYYY-MM-DD HH:mm:ss")'
+      avatar: '@image()',
+      email: '@email()',
+      remark: '@cparagraph(1, 3)'
     })
   }
 

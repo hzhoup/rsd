@@ -27,7 +27,7 @@ function createPageLoadingGuard(router: Router) {
     if (!userStore.token) return true
     setTimeout(() => {
       appStore.pageLoading = false
-    }, 150)
+    }, 320)
     return true
   })
 }

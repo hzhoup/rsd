@@ -30,10 +30,17 @@
       </a-row>
       <a-row :gutter="16">
         <a-col :span="12">
+          <a-form-item label="邮箱" name="email">
+            <a-input v-model:value="formState.email" placeholder="请输入邮箱" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
           <a-form-item label="联系电话" name="tel">
             <a-input v-model:value="formState.tel" placeholder="请输入联系电话" />
           </a-form-item>
         </a-col>
+      </a-row>
+      <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item label="性别" name="gender">
             <a-radio-group v-model:value="formState.gender">
@@ -42,11 +49,13 @@
             </a-radio-group>
           </a-form-item>
         </a-col>
-      </a-row>
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <a-form-item label="工号" name="enumber">
-            <a-input v-model:value="formState.enumber" placeholder="请输入工号" />
+        <a-col v-if="!isEdit" :span="12">
+          <a-form-item
+            :rules="[{ required: true, message: '请输入初始密码' }]"
+            label="初始密码"
+            name="password"
+          >
+            <a-input v-model:value="formState.password" placeholder="请输入初始密码" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -78,9 +87,11 @@
 import { FormInstance } from 'ant-design-vue'
 import { useAddUser } from './useAddUser'
 
+const emits = defineEmits(['refresh'])
+
 const formRef = ref<FormInstance>()
-const { title, visible, formState, formRules, loading, open, cancel, handleOk } =
-  useAddUser(formRef)
+const { isEdit, title, visible, formState, formRules, loading, open, cancel, handleOk } =
+  useAddUser(formRef, () => emits('refresh'))
 
 defineExpose({
   open

@@ -1,13 +1,15 @@
 import AppLoad from '@/AppLoad.vue'
 import { setupAssets } from '@/assets'
+import { setupVxeTable } from '@/components/Table'
 import { setupGlobDirectives } from '@/directives'
-import { setupRouter } from '@/router'
+import { router, setupRouter } from '@/router'
+import { createRouterGuard } from '@/router/guard'
 import { setupStore } from '@/store'
 import 'uno.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 
-async function boostrap() {
+function boostrap() {
   setupAssets()
 
   const loadApp = createApp(AppLoad)
@@ -18,11 +20,15 @@ async function boostrap() {
 
   setupStore(app)
 
-  await setupRouter(app)
+  setupRouter(app)
+
+  createRouterGuard(router)
 
   setupGlobDirectives(app)
+
+  setupVxeTable(app)
 
   app.mount('#app')
 }
 
-await boostrap()
+boostrap()

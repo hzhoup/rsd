@@ -10,13 +10,13 @@
     <a-form ref="formRef" :model="formState">
       <a-form-item
         label="重置密码"
-        name="password"
+        name="newPassword"
         :rules="[
           { required: true, message: '请输入密码' },
           { min: 6, max: 16, message: '密码长度在6到16位之间', trigger: 'change' }
         ]"
       >
-        <a-input-password v-model:value="formState.password" placeholder="请输入密码" />
+        <a-input-password v-model:value="formState.newPassword" placeholder="请输入密码" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -38,7 +38,7 @@ function close() {
   Object.assign(formState, {
     id: undefined,
     userName: '',
-    password: ''
+    newPassword: ''
   })
   title.value = ''
 }
@@ -47,7 +47,7 @@ const formRef = ref<FormInstance>()
 const formState = reactive({
   id: undefined,
   userName: '',
-  password: ''
+  newPassword: ''
 })
 const { execute, data, isFetching } = usePost('/user/resetPassword', formState)
 

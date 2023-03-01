@@ -1,26 +1,27 @@
-import { useGet, usePost } from '@/hooks/useRequest'
+import { usePost } from '@/hooks/useRequest'
 import type { FormInstance } from 'ant-design-vue'
 import { pick } from 'lodash-es'
 import { Ref } from 'vue'
-import XEUtils from 'xe-utils'
 
 const defaultFormState = {
-  id: '',
-  roleName: '',
-  remark: ''
+  id: undefined,
+  deptName: undefined,
+  parentId: null,
+  remark: undefined
 }
 
-export function useRoleManage(formRef: Ref<FormInstance | undefined>, refresh) {
+export function useDeptManage(formRef: Ref<FormInstance | undefined>, refresh) {
   const title = ref('')
   const visible = ref(false)
   const formState = reactive({ ...defaultFormState })
   const formRules = reactive({
-    roleName: [{ required: true, message: '请输入角色名称' }]
+    parentId: [{ required: true, message: '请选择上级部门' }],
+    deptName: [{ required: true, message: '请输入部门名称' }]
   })
-  const { execute, data, isFetching } = usePost('/role/save', formState)
+  const { execute, data, isFetching } = usePost('/dept/save', formState)
 
   function open(record) {
-    title.value = record ? `修改角色【${record.roleName}】` : `添加角色`
+    title.value = record ? `修改部门【${record.deptName}】` : `添加部门`
     if (record) Object.assign(formState, pick(record, Object.keys(defaultFormState)))
     visible.value = true
   }
@@ -55,23 +56,4 @@ export function useRoleManage(formRef: Ref<FormInstance | undefined>, refresh) {
     cancel,
     handleOk
   }
-}
-
-export const getMenuAction = async () => {
-  const { execute, data } = useGet('/role/getMenuAction')
-  await execute()
-  if (!unref(data)) return []
-  return XEUtils.toArrayTree(unref(data))
-}
-
-export const setRole = async params => {
-  const { execute, data } = usePost('/role/setRole', params)
-  await execute()
-  return unref(data.value)
-}
-
-export const getRoleMenuIds = async id => {
-  const { execute, data } = useGet('/role/getRoleMenuIds', { roleId: unref(id) })
-  await execute()
-  return unref(data)
 }

@@ -1,4 +1,5 @@
-import { useGet } from '@/hooks/useRequest'
+import { PageNameEnum } from '@/enum/page'
+import { useGet, usePost } from '@/hooks/useRequest'
 import { router } from '@/router'
 import { HomeRoute } from '@/router/routes/basic'
 import { BASIC_LAYOUT, BLANK_LAYOUT } from '@/router/routes/constant'
@@ -19,22 +20,24 @@ interface Info {
   user: Recordable
 }
 
+const defaultState = {
+  token: '',
+  isInitAuthRoute: false,
+  userInfo: {},
+  userMenus: [],
+  headerMenuKeys: [],
+  sideMenuKeys: []
+}
+
 const modules = import.meta.glob(['@/views/**/**.vue', '!**/modules/**/**.vue'])
 
 export const useUserStore = defineStore(
   'user-store',
   () => {
-    const state = reactive<UserState>({
-      token: '',
-      isInitAuthRoute: false,
-      userInfo: {},
-      userMenus: [],
-      headerMenuKeys: [],
-      sideMenuKeys: []
-    })
+    const state = reactive<UserState>({ ...defaultState })
 
     const permissions = computed(() => {
-      return Object.keys(state.userInfo?.permDataMap)
+      return Object.keys(state.userInfo?.permMap)
     })
 
     async function afterLogin() {
@@ -80,7 +83,15 @@ export const useUserStore = defineStore(
       router.addRoute(rootRouter as RouteRecordRaw)
     }
 
-    return { ...toRefs(state), permissions, afterLogin }
+    async function logout() {
+      const { execute, data } = usePost('/user/logout')
+      await execute()
+      if (!unref(data)) return
+      Object.assign(state, defaultState)
+      router.removeRoute(PageNameEnum.HOME_NAME)
+    }
+
+    return { ...toRefs(state), permissions, afterLogin, logout }
   },
   {
     persist: {

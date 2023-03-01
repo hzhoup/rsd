@@ -1,26 +1,39 @@
-import { useGet, usePost } from '@/hooks/useRequest'
+import { usePost } from '@/hooks/useRequest'
 import type { FormInstance } from 'ant-design-vue'
 import { pick } from 'lodash-es'
 import { Ref } from 'vue'
-import XEUtils from 'xe-utils'
 
 const defaultFormState = {
   id: '',
-  roleName: '',
+  parentId: null,
+  name: '',
+  type: 0,
+  url: '',
+  icon: '',
+  perms: '',
+  status: 1,
+  seq: 1,
   remark: ''
 }
 
-export function useRoleManage(formRef: Ref<FormInstance | undefined>, refresh) {
+export function useMenuManage(formRef: Ref<FormInstance | undefined>, refresh) {
   const title = ref('')
   const visible = ref(false)
   const formState = reactive({ ...defaultFormState })
   const formRules = reactive({
-    roleName: [{ required: true, message: '请输入角色名称' }]
+    parentId: [{ required: true, message: '请选择上级菜单' }],
+    name: [{ required: true, message: '请输入菜单名称' }],
+    type: [{ required: true, message: '请选择菜单类型' }],
+    url: [{ required: true, message: '请输入菜单地址' }],
+    icon: [{ required: true, message: '请输入菜单图标' }],
+    status: [{ required: true, message: '请选择菜单状态' }],
+    seq: [{ required: true, message: '请输入菜单显示排序' }],
+    perms: [{ required: true, message: '请输入菜单权限码' }]
   })
-  const { execute, data, isFetching } = usePost('/role/save', formState)
+  const { execute, data, isFetching } = usePost('/menu/save', formState)
 
   function open(record) {
-    title.value = record ? `修改角色【${record.roleName}】` : `添加角色`
+    title.value = record ? `修改菜单【${record.name}】` : `添加菜单`
     if (record) Object.assign(formState, pick(record, Object.keys(defaultFormState)))
     visible.value = true
   }
@@ -55,23 +68,4 @@ export function useRoleManage(formRef: Ref<FormInstance | undefined>, refresh) {
     cancel,
     handleOk
   }
-}
-
-export const getMenuAction = async () => {
-  const { execute, data } = useGet('/role/getMenuAction')
-  await execute()
-  if (!unref(data)) return []
-  return XEUtils.toArrayTree(unref(data))
-}
-
-export const setRole = async params => {
-  const { execute, data } = usePost('/role/setRole', params)
-  await execute()
-  return unref(data.value)
-}
-
-export const getRoleMenuIds = async id => {
-  const { execute, data } = useGet('/role/getRoleMenuIds', { roleId: unref(id) })
-  await execute()
-  return unref(data)
 }

@@ -40,7 +40,7 @@ export default defineConfig(({ command, mode }) => {
       pure: isBuild ? ['console.log', 'debugger'] : []
     },
     build: {
-      target: 'es2015',
+      target: 'esnext',
       cssTarget: 'chrome80',
       brotliSize: false,
       reportCompressedSize: false,

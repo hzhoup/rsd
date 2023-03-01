@@ -35,5 +35,5 @@ export function useRouterPush(inSetup = true) {
     routerPush({ name: PageNameEnum.HOME_NAME })
   }
 
-  return { route, routerPush, routerBack, goHome }
+  return { router, route, routerPush, routerBack, goHome }
 }

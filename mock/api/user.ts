@@ -7,12 +7,12 @@ import {
   resultPageSuccess,
   resultSuccess
 } from '../_utils'
-import { roleList, userInfo, userList, userTables } from '../modules/user'
+import { userInfo, userList, userTables } from '../modules/user'
 
 export default [
   {
     url: '/api/user/login',
-    timeout: Random.integer(200, 1000),
+    timeout: 150,
     method: 'post',
     response: ({ body }) => {
       const { userName, password } = body
@@ -23,6 +23,16 @@ export default [
       if (!checkUser) return resultError('用户名或密码错误!')
       const { token } = checkUser
       return resultSuccess(token)
+    }
+  },
+  {
+    url: '/api/user/updatePassword',
+    timeout: Random.integer(200, 1000),
+    method: 'post',
+    response: (request: requestParams) => {
+      const token = getRequestToken(request)
+      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
+      return resultSuccess(true)
     }
   },
   {
@@ -37,7 +47,7 @@ export default [
   },
   {
     url: '/api/user/getList',
-    timeout: Random.integer(200, 1000),
+    timeout: 150,
     method: 'get',
     response: (request: requestParams) => {
       const token = getRequestToken(request)
@@ -67,7 +77,7 @@ export default [
     }
   },
   {
-    url: '/api/user/addUser',
+    url: '/api/user/save',
     timeout: Random.integer(200, 1000),
     method: 'post',
     response: (request: requestParams) => {
@@ -77,24 +87,13 @@ export default [
     }
   },
   {
-    url: '/api/user/updateUser',
+    url: '/api/user/delete',
     timeout: Random.integer(200, 1000),
     method: 'post',
     response: (request: requestParams) => {
       const token = getRequestToken(request)
       if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
       return resultSuccess(true)
-    }
-  },
-  {
-    url: '/api/role/getAppRoleList',
-    timeout: Random.integer(200, 1000),
-    method: 'get',
-    response: (request: requestParams) => {
-      const token = getRequestToken(request)
-      if (!token) return resultError('登录过期,请重新登录', { errorCode: '401' })
-      const { pageNo = 1, pageSize = 10 } = request.query
-      return resultPageSuccess(pageNo, pageSize, roleList)
     }
   }
 ] as MockMethod[]

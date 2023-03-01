@@ -5,36 +5,41 @@ import { Ref } from 'vue'
 
 const defaultFormState = {
   id: '',
-  enumber: '',
-  gender: '',
-  mtypes: '',
-  position: '',
+  userName: '',
   realName: '',
-  remark: '',
+  gender: '',
   tel: '',
-  userName: ''
+  position: '',
+  email: '',
+  remark: ''
 }
 
-export function useAddUser(formRef: Ref<FormInstance | undefined>) {
+export function useAddUser(formRef: Ref<FormInstance | undefined>, refresh) {
   const title = ref('')
   const visible = ref(false)
+  const isEdit = ref(false)
   const formState = reactive({ ...defaultFormState })
   const formRules = reactive({
     userName: [{ required: true, message: '请输入用户名' }],
     realName: [{ required: true, message: '请输入真实姓名' }],
     tel: [{ required: true, message: '请输入联系电话' }],
+    gender: [{ required: true, message: '请选择性别' }],
     position: [{ required: true, message: '请输入职位' }]
   })
-  const { execute, data, isFetching } = usePost('/user/addUser', formState)
+  const { execute, data, isFetching } = usePost('/user/save', formState)
 
   function open(record) {
     title.value = record ? `修改员工【${record.userName}】` : `添加员工`
-    if (record) Object.assign(formState, pick(record, Object.keys(defaultFormState)))
+    if (record) {
+      isEdit.value = true
+      Object.assign(formState, pick(record, Object.keys(defaultFormState)))
+    }
     visible.value = true
   }
 
   function cancel() {
     title.value = ''
+    isEdit.value = false
     Object.assign(formState, defaultFormState)
     visible.value = false
   }
@@ -46,7 +51,10 @@ export function useAddUser(formRef: Ref<FormInstance | undefined>) {
       const isValidated = await form.validate()
       if (!isValidated) return
       await execute()
-      visible.value = !unref(data)
+      if (data.value) {
+        cancel()
+        refresh()
+      }
     } catch {}
   }
 
@@ -55,6 +63,7 @@ export function useAddUser(formRef: Ref<FormInstance | undefined>) {
     title,
     formState,
     formRules,
+    isEdit,
     loading: isFetching,
     open,
     cancel,
