@@ -12,15 +12,14 @@ export function configUnPlugins() {
   plugins.push(
     components({
       resolvers: [
-        AntDesignVueResolver({ importStyle: 'less' }),
+        AntDesignVueResolver({ importStyle: false }),
         iconsResolver({
           prefix: 'icon',
           alias: { 'park-outline': 'icon-park-outline' },
           customCollections: ['custom']
         })
       ],
-      dirs: ['src/components'],
-      extensions: ['vue', 'tsx'],
+      dirs: [],
       dts: 'types/modules.d.ts'
     })
   )

@@ -13,6 +13,7 @@
 </template>
 
 <script lang="tsx" setup>
+import RouteMenu from '@/components/Menus/RouteMenu.vue'
 import { useRouterPush } from '@/hooks/useRouterPush'
 import { useUserStore } from '@/store/modules/user'
 import { list2tree } from '@/utils/common/tree'

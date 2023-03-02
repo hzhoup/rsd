@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+import SystemLogo from '@/components/Application/src/SystemLogo.vue'
 import LayoutMenu from '@/components/Menus/LayoutMenu.vue'
 import FullScreen from '@/layout/common/FullScreen.vue'
 import RefreshPage from '@/layout/common/RefreshPage.vue'

@@ -4,10 +4,11 @@
   </BasicModal>
 </template>
 
-<script setup lang="ts">
-import { useForm } from '@/components/Form/hooks/useForm'
-import { FormSchema } from '@/components/Form/types/form'
-import { useModalInner } from '@/components/Modal/hooks/useModal'
+<script lang="ts" setup>
+import { BasicForm } from '@/components/Form'
+import { useForm } from '@/components/Form/src/hooks/useForm'
+import { FormSchema } from '@/components/Form/src/types/form'
+import { BasicModal, useModalInner } from '@/components/Modal'
 import { usePost } from '@/hooks/useRequest'
 
 const [register, { setModalProps, closeModal }] = useModalInner(({ id }) => {

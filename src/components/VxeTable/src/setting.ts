@@ -2,12 +2,12 @@ import { VXETable } from 'vxe-table'
 
 VXETable.setup({
   table: {
+    headerAlign: 'center',
+    showOverflow: 'tooltip',
     border: true,
     stripe: true,
     columnConfig: {
-      resizable: true,
-      isCurrent: true,
-      isHover: true
+      resizable: true
     },
     rowConfig: {
       isCurrent: true,
@@ -32,9 +32,21 @@ VXETable.setup({
       custom: true
     },
     pagerConfig: {
-      pageSizes: [20, 50, 100, 500],
-      pageSize: 20,
-      autoHidden: true
+      pageSizes: [10, 20, 50, 100, 200, 500],
+      pageSize: 10,
+      autoHidden: true,
+      perfect: true,
+      layouts: [
+        'Sizes',
+        'PrevJump',
+        'PrevPage',
+        'Number',
+        'NextPage',
+        'NextJump',
+        'FullJump',
+        'Total'
+      ],
+      align: 'right'
     },
     proxyConfig: {
       form: true,

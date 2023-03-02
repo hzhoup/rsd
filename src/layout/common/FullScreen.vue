@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+import { HoverContainer } from '@/components/Application'
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 
 const { toggle, isFullscreen } = useFullscreen()

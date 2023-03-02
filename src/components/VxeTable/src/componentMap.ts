@@ -1,5 +1,5 @@
-import ApiSelect from '@/components/Form/components/ApiSelect.vue'
-import ApiTreeSelect from '@/components/Form/components/ApiTreeSelect.vue'
+import ApiSelect from '@/components/Form/src/components/ApiSelect.vue'
+import ApiTreeSelect from '@/components/Form/src/components/ApiTreeSelect.vue'
 import {
   AutoComplete,
   Button,
