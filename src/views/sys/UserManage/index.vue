@@ -1,13 +1,24 @@
 <template>
   <a-card>
-    <FetchTable ref="xTable" :columns="columns" :items="items" url="/user/getList">
+    <FetchTable
+      ref="xTable"
+      :columns="columns"
+      :items="items"
+      url="/user/getList"
+      @checkbox-all="selectChangeEvent"
+      @checkbox-change="selectChangeEvent"
+    >
       <template #toolbar_buttons>
-        <a-button type="primary" @click="addUser(null)">添加</a-button>
+        <a-space>
+          <a-button type="primary" @click="addUser(null)">添加</a-button>
+          <a-button type="primary" @click="setAssignedRoles">设置角色</a-button>
+          <a-button type="primary">设置部门</a-button>
+        </a-space>
       </template>
       <template #operation="{ row }">
         <a-space>
           <a-button type="link" @click="addUser(row)">编辑</a-button>
-          <a-button type="link" @click="resetPwd(row)">重置密码</a-button>
+          <a-button type="link" @click="openResetPwd(row)">重置密码</a-button>
           <a-button type="link" @click="assignedRoles(row)">分配角色</a-button>
           <a-popconfirm
             :title="`是否确认${row.status ? '启用' : '禁用'}`"
@@ -28,18 +39,20 @@
         </a-space>
       </template>
     </FetchTable>
-    <AssignedRolesModal ref="assignedRolesModal" />
-    <ResetPwdModal ref="resetPwdModalRef" />
+    <AssignedRolesModal ref="assignedRolesModal" @refresh="refresh(true)" />
+    <ResetPwdModal @register="register" />
     <AddUserModal ref="addUserModalRef" @refresh="refresh(true)" />
   </a-card>
 </template>
 
 <script lang="ts" setup>
+import { useModal } from '@/components/Modal/hooks/useModal'
 import { deleteSingle } from '@/hooks/useFixHttp'
 import AddUserModal from '@/views/sys/UserManage/modules/AddUserModal.vue'
 import AssignedRolesModal from '@/views/sys/UserManage/modules/AssignedRolesModal.vue'
 import ResetPwdModal from '@/views/sys/UserManage/modules/ResetPwdModal.vue'
 import type { VxeGridProps } from 'vxe-table'
+import { VxeTableEvents } from 'vxe-table'
 import { editStatus } from './useUserManage'
 
 defineOptions({ name: 'UserManage' })
@@ -96,12 +109,6 @@ function refresh(flag = false) {
   xTable.value.refresh(flag)
 }
 
-const resetPwdModalRef = ref()
-
-function resetPwd(record) {
-  resetPwdModalRef.value?.open(record)
-}
-
 const addUserModalRef = ref()
 
 function addUser(record) {
@@ -112,5 +119,20 @@ const assignedRolesModal = ref()
 
 function assignedRoles({ id }) {
   assignedRolesModal.value?.open(id)
+}
+
+const selectedRowKeys = ref<number[]>([])
+const selectChangeEvent: VxeTableEvents.CheckboxChange = ({ $table }) => {
+  const records = $table.getCheckboxRecords()
+  selectedRowKeys.value = records.map(row => row.id)
+}
+const setAssignedRoles = () => {
+  assignedRolesModal.value?.open(unref(selectedRowKeys))
+}
+
+const [register, { openModal: openResetPwdModal }] = useModal()
+
+function openResetPwd({ id }) {
+  openResetPwdModal(true, { id })
 }
 </script>

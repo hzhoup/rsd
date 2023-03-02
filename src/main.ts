@@ -1,6 +1,5 @@
 import AppLoad from '@/AppLoad.vue'
 import { setupAssets } from '@/assets'
-import { setupVxeTable } from '@/components/Table'
 import { setupGlobDirectives } from '@/directives'
 import { router, setupRouter } from '@/router'
 import { createRouterGuard } from '@/router/guard'
@@ -25,8 +24,6 @@ function boostrap() {
   createRouterGuard(router)
 
   setupGlobDirectives(app)
-
-  setupVxeTable(app)
 
   app.mount('#app')
 }

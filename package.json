@@ -21,9 +21,11 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.0.32",
     "pinia-plugin-persistedstate": "^3.1.0",
+    "resize-observer-polyfill": "^1.5.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vxe-table": "^4.3.10",
+    "vxe-table-plugin-export-xlsx": "^3.0.4",
     "xe-utils": "^3.5.7"
   },
   "devDependencies": {

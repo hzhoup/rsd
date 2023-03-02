@@ -1,65 +1,49 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :destroy-on-close="true"
-    :title="title"
-    :confirm-loading="isFetching"
-    @cancel="close"
-    @ok="resetPwd"
-  >
-    <a-form ref="formRef" :model="formState">
-      <a-form-item
-        label="重置密码"
-        name="newPassword"
-        :rules="[
-          { required: true, message: '请输入密码' },
-          { min: 6, max: 16, message: '密码长度在6到16位之间', trigger: 'change' }
-        ]"
-      >
-        <a-input-password v-model:value="formState.newPassword" placeholder="请输入密码" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
+  <BasicModal destroy-on-close title="重置密码" v-bind="$attrs" @ok="resetPwd" @register="register">
+    <BasicForm @register="registerForm" />
+  </BasicModal>
 </template>
 
 <script setup lang="ts">
+import { useForm } from '@/components/Form/hooks/useForm'
+import { FormSchema } from '@/components/Form/types/form'
+import { useModalInner } from '@/components/Modal/hooks/useModal'
 import { usePost } from '@/hooks/useRequest'
-import type { FormInstance } from 'ant-design-vue'
 
-const visible = ref(false)
-const title = ref('')
-function open({ id, userName }) {
-  visible.value = true
-  formState.id = id
-  formState.userName = userName
-  title.value = `重置密码【${userName}】`
-}
-function close() {
-  Object.assign(formState, {
-    id: undefined,
-    userName: '',
-    newPassword: ''
-  })
-  title.value = ''
-}
-
-const formRef = ref<FormInstance>()
-const formState = reactive({
-  id: undefined,
-  userName: '',
-  newPassword: ''
+const [register, { setModalProps, closeModal }] = useModalInner(({ id }) => {
+  paramRef.id = id
 })
-const { execute, data, isFetching } = usePost('/user/resetPassword', formState)
+
+const schemas: FormSchema[] = [
+  {
+    field: 'newPassword',
+    component: 'InputPassword',
+    label: '重置密码',
+    colProps: { span: 24 },
+    rules: [
+      { required: true, message: '请输入密码' },
+      { min: 6, max: 16, message: '密码长度在6到16位之间' }
+    ]
+  }
+]
+const [registerForm, { validateFields }] = useForm({
+  labelWidth: 80,
+  schemas,
+  showActionButtonGroup: false
+})
+
+const paramRef = reactive<Recordable>({})
+const { execute, data } = usePost('/user/resetPassword', paramRef)
 
 async function resetPwd() {
   try {
-    await formRef.value?.validateFields()
+    const res = await validateFields()
+    if (!res) return
+    setModalProps({ confirmLoading: true, loading: true })
+    Object.assign(paramRef, res)
     await execute()
-    if (data.value) visible.value = false
+    setModalProps({ confirmLoading: false, loading: false })
+    if (data.value) closeModal()
   } catch {}
 }
-
-defineExpose({
-  open
-})
 </script>

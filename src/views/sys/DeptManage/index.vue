@@ -57,14 +57,16 @@
       <a-table-column :width="120" fixed="right" title="操作">
         <template #default="{ record }">
           <a-space>
-            <a-button type="link" @click="saveDept(record)">编辑</a-button>
+            <a-button v-if="record.parentId !== -1" type="link" @click="saveDept(record)">
+              编辑
+            </a-button>
             <a-button type="link">用户列表</a-button>
             <a-popconfirm
               :title="`是否确认删除`"
               placement="left"
               @confirm="deleteSingle('/dept/delete', { id: record.id }, () => refresh(true))"
             >
-              <a-button type="link">删除</a-button>
+              <a-button v-if="record.parentId !== -1" type="link">删除</a-button>
             </a-popconfirm>
           </a-space>
         </template>

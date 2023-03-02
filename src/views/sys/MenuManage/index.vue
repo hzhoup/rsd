@@ -101,7 +101,7 @@
         :ellipsis="{ showTitle: true }"
         :resizable="true"
         :sorter="true"
-        :width="180"
+        :width="160"
         data-index="remark"
         title="备注"
       />

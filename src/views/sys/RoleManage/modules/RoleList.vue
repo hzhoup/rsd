@@ -36,6 +36,7 @@
 import { deleteSingle } from '@/hooks/useFixHttp'
 import { useGet } from '@/hooks/useRequest'
 import RoleConfig from '@/views/sys/RoleManage/modules/RoleConfig.vue'
+import { isNil } from 'lodash-es'
 import { VxeGridProps } from 'vxe-table'
 import RoleManageModal from './RoleManageModal.vue'
 
@@ -49,16 +50,29 @@ watch(
   () => props.userId,
   async newValue => {
     if (newValue === undefined) return
-    const $table = xTable.value
     await execute()
     if (!data.value) return
     roleIds.value = data.value.roleIds
-    nextTick(() => {
-      const checkedRow = $table?.list.filter(row => data.value?.roleIds.includes(row.id))
-      $table?.xTable.setCheckboxRow(...checkedRow, true)
-    })
+    // nextTick(() => {
+    //   const $table = xTable.value
+    //   console.log($table.list)
+    //   const checkedRow = $table?.xTable
+    //     .getData()
+    //     .filter(row => data.value?.roleIds.includes(row.id))
+    //   $table?.xTable.setCheckboxRow(checkedRow, true)
+    // })
   },
   { immediate: true }
+)
+watch(
+  () => xTable.value?.xTable,
+  newValue => {
+    if (isNil(newValue)) return
+    console.log(newValue.getData())
+    const checkedRow = newValue.getData().filter(row => roleIds.value.includes(row.id))
+    newValue.setCheckboxRow(checkedRow, true)
+  },
+  { deep: true, immediate: true }
 )
 
 const columns: VxeGridProps['columns'] = [
@@ -86,13 +100,27 @@ function addOrUpdateRole(record) {
 }
 
 const selectRowKeys = ref([])
-const roleIds = ref([])
+const roleIds = ref<number[]>([])
 
-function selectChangeEvent() {
-  const $table = xTable.value
-  const records = $table.xTable?.getCheckboxRecords()
+function selectChangeEvent({ $table }) {
+  const records = $table.getCheckboxRecords()
   selectRowKeys.value = unref(records).map(row => row.id)
 }
 
-defineExpose({ selectRowKeys, roleIds })
+const pageRoleIds = ref<number[]>([])
+watch(
+  () => xTable.value?.list,
+  newValue => {
+    if (newValue?.length) pageRoleIds.value = newValue.map(row => row.id)
+  },
+  { deep: true, immediate: true }
+)
+
+function resetRef() {
+  selectRowKeys.value = []
+  roleIds.value = []
+  pageRoleIds.value = []
+}
+
+defineExpose({ selectRowKeys, roleIds, pageRoleIds, resetRef })
 </script>
