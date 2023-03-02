@@ -17,6 +17,7 @@
     "@vueuse/core": "^9.13.0",
     "ant-design-vue": "^3.2.15",
     "dayjs": "^1.11.7",
+    "exceljs": "^4.3.0",
     "lodash-es": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.32",
@@ -26,7 +27,8 @@
     "vue-router": "^4.1.6",
     "vxe-table": "^4.3.10",
     "vxe-table-plugin-export-xlsx": "^3.0.4",
-    "xe-utils": "^3.5.7"
+    "xe-utils": "^3.5.7",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@iconify-json/ant-design": "^1.1.5",
