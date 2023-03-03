@@ -1,36 +1,49 @@
 <template>
   <a-card>
-    <VxeBasicTable ref="tableRef" v-bind="gridOptions" @checkbox-change="selectChange">
+    <VxeBasicTable ref="tableRef" url="/user/getList" v-bind="gridOptions">
       <template #toolbtns>
         <a-space>
-          <a-button type="primary" @click="openSaveUser(null)">添加员工</a-button>
-          <a-button :disabled="!selectRowKeys.length" type="primary">设置角色</a-button>
-          <a-button :disabled="!selectRowKeys.length" type="primary">设置部门</a-button>
-          <a-button :disabled="selectRowKeys.length !== 1" type="primary" @click="openResetPwd">
+          <a-button type="primary" @click="openSaveUser(null)"> 添加员工 </a-button>
+          <a-button :disabled="!tableRef?.selectRows.length" type="primary"> 设置角色 </a-button>
+          <a-button :disabled="!tableRef?.selectRows.length" type="primary"> 设置部门 </a-button>
+          <a-button
+            :disabled="tableRef?.selectRows.length !== 1"
+            type="primary"
+            @click="openResetPwd"
+          >
             重置密码
           </a-button>
-          <a-button :disabled="selectRowKeys.length !== 1" type="primary" @click="editStatus">
+          <a-button
+            :disabled="tableRef?.selectRows.length !== 1"
+            type="primary"
+            @click="editStatus"
+          >
             {{ getEditText }}
           </a-button>
-          <a-button :disabled="selectRowKeys.length !== 1" type="primary" @click="deleteUser">
+          <a-button
+            :disabled="tableRef?.selectRows.length !== 1"
+            type="primary"
+            @click="deleteUser"
+          >
             删除
           </a-button>
         </a-space>
       </template>
       <template #action="{ row }">
-        <a-button type="link">{{ row?.userName }}</a-button>
+        <a-button type="link" @click="openSaveUser(row)">
+          {{ row.userName }}
+        </a-button>
       </template>
     </VxeBasicTable>
-    <ResetPwdModal @register="register" />
-    <SaveUserModal @refresh="refresh" @register="registerSaveUserModal" />
+    <ResetPwdModal @refresh="tableRef?.refresh" @register="registerResetPwdModal" />
+    <SaveUserModal @refresh="tableRef?.refresh" @register="registerSaveUserModal" />
   </a-card>
 </template>
 
 <script lang="ts" setup>
-import { deleteSigneById } from '@/api/common/delete'
+import { deleteSigneConfirm } from '@/api/common/delete'
 import { useModal } from '@/components/Modal'
-import { BasicTableProps, VxeBasicTable, VxeGridInstance } from '@/components/VxeTable'
-import { pageQuery } from '@/components/VxeTable/src/queryMethods'
+import { BasicTableProps, VxeBasicInstance, VxeBasicTable } from '@/components/VxeTable'
 import { useMessage } from '@/hooks/useMessage'
 import { usePost } from '@/hooks/useRequest'
 import ResetPwdModal from '@/views/sys/UserManage/modules/ResetPwdModal.vue'
@@ -40,18 +53,13 @@ defineOptions({ name: 'UserManage' })
 
 const { createConfirm, createMessage } = useMessage()
 
-const tableRef = ref<VxeGridInstance>()
-
-function refresh() {
-  unref(tableRef)?.commitProxy('reload')
-}
+const tableRef = ref<VxeBasicInstance>()
 
 const gridOptions = reactive<BasicTableProps>({
   id: 'UserManageTable',
   toolbarConfig: {
     slots: { buttons: 'toolbtns' }
   },
-  checkboxConfig: { checkField: 'checked', trigger: 'row', range: true },
   columns: [
     { type: 'checkbox', width: 60, align: 'center', fixed: 'left' },
     {
@@ -121,25 +129,12 @@ const gridOptions = reactive<BasicTableProps>({
         }
       }
     ]
-  },
-  proxyConfig: {
-    seq: true,
-    sort: true,
-    autoLoad: true,
-    form: true,
-    props: {
-      result: 'data',
-      total: 'totalCount'
-    },
-    ajax: {
-      query: e => pageQuery(e, '/user/getList')
-    }
   }
 })
 
-const [register, { openModal: openResetPwdModal }] = useModal()
-function openResetPwd({ id }) {
-  openResetPwdModal(true, { id })
+const [registerResetPwdModal, { openModal: openResetPwdModal }] = useModal()
+function openResetPwd() {
+  openResetPwdModal(true, tableRef.value?.selectRows[0])
 }
 
 const [registerSaveUserModal, { openModal: openSaveUserModal }] = useModal()
@@ -147,43 +142,35 @@ function openSaveUser(row) {
   openSaveUserModal(true, row)
 }
 
-const selectRowKeys = ref([])
-const selectRows = ref<Recordable[]>([])
-function selectChange({ $table }) {
-  selectRows.value = $table.getCheckboxRecords()
-  selectRowKeys.value = $table.getCheckboxRecords().map(row => row.id)
-}
-
 const getEditText = computed(() => {
-  if (unref(selectRows).length !== 1) return '禁用/启用'
-  return unref(selectRows)[0].status ? '启用' : '禁用'
+  if (tableRef.value?.selectRows.length !== 1) return '禁用/启用'
+  return tableRef.value?.selectRows[0].status ? '启用' : '禁用'
 })
 const editStatus = () =>
   createConfirm({
     type: 'info',
     iconType: 'info',
-    title: `是否确认${unref(getEditText)}用户【${unref(selectRows)[0].userName}】`,
+    title: `是否确认${unref(getEditText)}用户【${tableRef.value?.selectRows[0].userName}】`,
     onOk: async () => {
-      const params = { id: unref(selectRows)[0].id, status: unref(selectRows)[0].status ? 0 : 1 }
+      const params = {
+        id: tableRef.value?.selectRows[0].id,
+        status: tableRef.value?.selectRows[0].status ? 0 : 1
+      }
       const { execute, data } = usePost('/user/updateStatus', params)
       await execute()
       if (!data.value) return
       createMessage.success('操作成功')
-      refresh()
+      tableRef.value?.refresh()
     }
   })
 
-const deleteUser = () =>
-  createConfirm({
-    type: 'info',
-    iconType: 'info',
-    title: `是否确认删除用户【${unref(selectRows)[0].userName}】`,
-    onOk: async () => {
-      const { execute, data } = deleteSigneById('user', unref(selectRows)[0].id)
-      await execute()
-      if (!data.value) return
-      createMessage.success('操作成功')
-      refresh()
-    }
+const deleteUser = () => {
+  const title = `用户【${tableRef.value?.selectRows[0].userName}】`
+  return deleteSigneConfirm({
+    title,
+    prefix: 'user',
+    id: tableRef.value?.selectRows[0].id,
+    afterDeleteFn: tableRef.value?.refresh
   })
+}
 </script>

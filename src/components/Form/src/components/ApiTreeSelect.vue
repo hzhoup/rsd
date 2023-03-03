@@ -12,13 +12,12 @@
 <script lang="ts">
 import { propTypes } from '@/utils/propTypes'
 import { LoadingOutlined } from '@ant-design/icons-vue'
-import { TreeSelect } from 'ant-design-vue'
 import { get, isArray, isFunction } from 'lodash-es'
 import { computed, defineComponent, onMounted, ref, unref, watch } from 'vue'
 
 export default defineComponent({
   name: 'ApiTreeSelect',
-  components: { ATreeSelect: TreeSelect, LoadingOutlined },
+  components: { LoadingOutlined },
   props: {
     api: { type: Function as PropType<(arg?: Recordable) => Promise<Recordable>> },
     params: { type: Object },
@@ -80,7 +79,6 @@ export default defineComponent({
       isFirstLoaded.value = true
       emit('options-change', treeData.value)
     }
-
     return { getAttrs, loading, handleChange }
   }
 })

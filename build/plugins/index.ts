@@ -10,7 +10,12 @@ import { configUnPlugins } from './unplugin'
 export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const { VITE_MOCK } = viteEnv
 
-  const plugins: PluginOption[] = [vue(), vueJsx(), vueMacros.vite({}), eslint()]
+  const plugins: PluginOption[] = [
+    vue(),
+    vueJsx(),
+    vueMacros.vite({}),
+    eslint({ emitWarning: false })
+  ]
 
   plugins.push(configUnocss())
 

@@ -1,5 +1,4 @@
 type ColSpanType = number | string
-
 export interface ColEx {
   style?: any
   /**

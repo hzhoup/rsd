@@ -1,10 +1,10 @@
 <template>
   <a-select
+    v-bind="$attrs"
     v-model:value="state"
     :options="getOptions"
-    v-bind="$attrs"
-    @change="handleChange"
     @dropdown-visible-change="handleFetch"
+    @change="handleChange"
   >
     <template v-for="item in Object.keys($slots)" #[item]="data">
       <slot :name="item" v-bind="data || {}"></slot>
@@ -32,9 +32,7 @@ type OptionsItem = { label: string; value: string; disabled?: boolean }
 
 export default defineComponent({
   name: 'ApiSelect',
-  components: {
-    LoadingOutlined
-  },
+  components: { LoadingOutlined },
   inheritAttrs: false,
   props: {
     value: [Array, Object, String, Number],
@@ -43,9 +41,7 @@ export default defineComponent({
       type: Function as PropType<(arg?: Recordable) => Promise<OptionsItem[]>>,
       default: null
     },
-    // api params
     params: propTypes.any.def({}),
-    // support xxx.xxx.xx
     resultField: propTypes.string.def(''),
     labelField: propTypes.string.def('label'),
     valueField: propTypes.string.def('value'),

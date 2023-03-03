@@ -1,7 +1,16 @@
 import { deepMerge } from '@/utils'
 import { dateUtil } from '@/utils/dateUtils'
-import type { NamePath } from 'ant-design-vue/es/form/interface'
-import { cloneDeep, isArray, isFunction, isNil, isObject, isString, uniqBy } from 'lodash-es'
+import type { NamePath } from 'ant-design-vue/lib/form/interface'
+import {
+  cloneDeep,
+  isArray,
+  isEmpty,
+  isFunction,
+  isNil,
+  isObject,
+  isString,
+  uniqBy
+} from 'lodash-es'
 import { EmitType, Fn } from 'types'
 import type { ComputedRef, Ref } from 'vue'
 import { nextTick, toRaw, unref } from 'vue'
@@ -18,7 +27,6 @@ interface UseFormActionContext {
   schemaRef: Ref<FormSchema[]>
   handleFormValues: Fn
 }
-
 export function useFormEvents({
   emit,
   getProps,
@@ -97,23 +105,21 @@ export function useFormEvents({
         nestKeyArray.forEach((nestKey: string) => {
           try {
             const value = nestKey.split('.').reduce((out, item) => out[item], values)
-            if (value !== undefined) {
+            if (isNil(value)) {
               unref(formModel)[nestKey] = unref(value)
               validKeys.push(nestKey)
             }
           } catch (e) {
             // key not exist
-            if (defaultValueRef.value[nestKey] !== undefined) {
+            if (isNil(defaultValueRef.value[nestKey])) {
               unref(formModel)[nestKey] = cloneDeep(unref(defaultValueRef.value[nestKey]))
             }
           }
         })
       }
     })
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     validateFields(validKeys).catch(_ => {})
   }
-
   /**
    * @description: Delete based on field name
    */
@@ -252,7 +258,7 @@ export function useFormEvents({
         !isNil(item.defaultValue) &&
         (!(item.field in currentFieldsValue) ||
           isNil(currentFieldsValue[item.field]) ||
-          isNil(currentFieldsValue[item.field]))
+          isEmpty(currentFieldsValue[item.field]))
       ) {
         obj[item.field] = item.defaultValue
       }

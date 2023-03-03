@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { deleteSingle } from '@/hooks/useFixHttp'
 import { useGet } from '@/hooks/useRequest'
-import RoleConfig from '@/views/sys/RoleManage/modules/RoleConfig.vue'
+import RoleConfig from '@/views/sys/RoleManage/modules/RoleConfigDrawer.vue'
 import { isNil } from 'lodash-es'
 import { VxeGridProps } from 'vxe-table'
 import RoleManageModal from './RoleManageModal.vue'
@@ -68,7 +68,6 @@ watch(
   () => xTable.value?.xTable,
   newValue => {
     if (isNil(newValue)) return
-    console.log(newValue.getData())
     const checkedRow = newValue.getData().filter(row => roleIds.value.includes(row.id))
     newValue.setCheckboxRow(checkedRow, true)
   },

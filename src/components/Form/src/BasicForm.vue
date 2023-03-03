@@ -1,37 +1,37 @@
 <template>
   <a-form
+    v-bind="getBindValue"
     ref="formElRef"
     :class="getFormClass"
     :model="formModel"
-    v-bind="getBindValue"
     @keypress.enter="handleEnterPress"
   >
     <a-row v-bind="getRow">
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema" :key="schema.field">
-        <FormItem
+        <BasicFormItem
+          :is-advanced="fieldsIsAdvancedMap[schema.field]"
           :all-default-values="defaultValueRef"
           :form-action-type="formActionType"
+          :schema="schema"
           :form-model="formModel"
           :form-props="getProps"
-          :is-advanced="fieldsIsAdvancedMap[schema.field]"
-          :schema="schema"
           :set-form-model="setFormModel"
         >
           <template v-for="item in Object.keys($slots)" #[item]="data">
             <slot :name="item" v-bind="data || {}"></slot>
           </template>
-        </FormItem>
+        </BasicFormItem>
       </template>
 
-      <FormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
+      <BasicFormAction v-bind="getFormActionBindProps" @toggle-advanced="handleToggleAdvanced">
         <template
           v-for="item in ['resetBefore', 'submitBefore', 'advanceBefore', 'advanceAfter']"
           #[item]="data"
         >
           <slot :name="item" v-bind="data || {}"></slot>
         </template>
-      </FormAction>
+      </BasicFormAction>
       <slot name="formFooter"></slot>
     </a-row>
   </a-form>
@@ -44,8 +44,9 @@ import { useDebounceFn } from '@vueuse/core'
 import { cloneDeep, isArray, isFunction } from 'lodash-es'
 import type { Ref } from 'vue'
 import { computed, defineComponent, nextTick, onMounted, reactive, ref, unref, watch } from 'vue'
-import FormAction from './components/FormAction.vue'
-import FormItem from './components/FormItem.vue'
+import BasicFormAction from './components/BasicFormAction.vue'
+import BasicFormItem from './components/BasicFormItem.vue'
+
 import { dateItemType } from './helper'
 import useAdvanced from './hooks/useAdvanced'
 import { useAutoFocus } from './hooks/useAutoFocus'
@@ -62,7 +63,7 @@ const prefixCls = 'rds-basic-form'
 
 export default defineComponent({
   name: 'BasicForm',
-  components: { FormItem, FormAction },
+  components: { BasicFormItem, BasicFormAction },
   props: basicProps,
   emits: ['advanced-change', 'reset', 'submit', 'register', 'field-value-change'],
   setup(props, { emit, attrs }) {
@@ -237,7 +238,6 @@ export default defineComponent({
         return
       }
       if (!validateTrigger || validateTrigger === 'change') {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         validateFields([key]).catch(_ => {})
       }
       emit('field-value-change', key, value)

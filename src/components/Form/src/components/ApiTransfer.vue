@@ -1,26 +1,25 @@
 <template>
-  <Transfer
+  <a-transfer
     :data-source="getdataSource"
     :filter-option="filterOption"
     :render="item => item.title"
-    :selected-keys="selectedKeys"
-    :show-search="showSearch"
     :show-select-all="showSelectAll"
+    :selected-keys="selectedKeys"
     :target-keys="getTargetKeys"
+    :show-search="showSearch"
     @change="handleChange"
   />
 </template>
 
 <script lang="ts">
 import { propTypes } from '@/utils/propTypes'
-import { Transfer } from 'ant-design-vue'
 import { TransferDirection, TransferItem } from 'ant-design-vue/lib/transfer'
 import { get, isFunction, omit } from 'lodash-es'
+import { Fn } from 'types'
 import { computed, defineComponent, ref, unref, watch, watchEffect } from 'vue'
 
 export default defineComponent({
   name: 'ApiTransfer',
-  components: { Transfer },
   props: {
     value: { type: Array as PropType<Array<string>> },
     api: {
@@ -81,8 +80,6 @@ export default defineComponent({
 
     function handleChange(keys: string[], direction: TransferDirection, moveKeys: string[]) {
       _targetKeys.value = keys
-      console.log(direction)
-      console.log(moveKeys)
       emit('change', keys)
     }
 
@@ -123,11 +120,9 @@ export default defineComponent({
       } finally {
       }
     }
-
     function emitChange() {
       emit('options-change', unref(getdataSource))
     }
-
     return { getTargetKeys, getdataSource, getAttrs, handleChange }
   }
 })

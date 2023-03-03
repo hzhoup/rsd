@@ -17,15 +17,18 @@ import BasicForm from '@/components/Form/src/BasicForm.vue'
 import { useModalInner } from '@/components/Modal'
 import BasicModal from '@/components/Modal/src/BasicModal.vue'
 import { useMessage } from '@/hooks/useMessage'
+import { isNil } from 'lodash-es'
 
 const { createMessage } = useMessage()
 const emits = defineEmits(['refresh', 'register'])
 
 const [registerModal, { setModalProps, closeModal }] = useModalInner(row => {
+  row.gender = `${row.gender}`
   setFieldsValue(row)
 })
 
 const schemas: FormSchema[] = [
+  { field: 'id', label: 'id', component: 'InputNumber', show: false },
   {
     field: 'divider-basic',
     component: 'Divider',
@@ -37,7 +40,8 @@ const schemas: FormSchema[] = [
     component: 'Input',
     label: '用户名',
     colProps: { span: 12 },
-    rules: [{ required: true, message: '请输入用户名' }]
+    rules: [{ required: true, message: '请输入用户名' }],
+    dynamicDisabled: () => !isNil(getFieldsValue()?.id)
   },
   {
     field: 'realName',
@@ -77,7 +81,8 @@ const schemas: FormSchema[] = [
     component: 'InputPassword',
     label: '初始密码',
     colProps: { span: 12 },
-    rules: [{ required: true, message: '请输入初始密码' }]
+    rules: [{ required: true, message: '请输入初始密码' }],
+    ifShow: () => isNil(getFieldsValue()?.id)
   },
   {
     field: 'divider-basic',
@@ -104,7 +109,7 @@ const schemas: FormSchema[] = [
     }
   }
 ]
-const [registerForm, { validateFields, setFieldsValue }] = useForm({
+const [registerForm, { validateFields, setFieldsValue, getFieldsValue }] = useForm({
   schemas,
   labelWidth: 80,
   rowProps: { gutter: 16 },

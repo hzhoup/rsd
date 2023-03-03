@@ -3,8 +3,8 @@
     v-model:value="state"
     :display-render="handleRenderDisplay"
     :load-data="loadData"
-    :options="options"
     change-on-select
+    :options="options"
     @change="handleChange"
   >
     <template v-if="loading" #suffixIcon>
@@ -18,12 +18,10 @@
     </template>
   </a-cascader>
 </template>
-
 <script lang="ts">
 import { useRuleFormItem } from '@/hooks/components/useFormItem'
 import { propTypes } from '@/utils/propTypes'
 import { LoadingOutlined } from '@ant-design/icons-vue'
-import { Cascader } from 'ant-design-vue'
 import { get, isFunction, omit } from 'lodash-es'
 import { defineComponent, PropType, ref, unref, watch, watchEffect } from 'vue'
 
@@ -34,13 +32,9 @@ interface Option {
   isLeaf?: boolean
   children?: Option[]
 }
-
 export default defineComponent({
   name: 'ApiCascader',
-  components: {
-    LoadingOutlined,
-    [Cascader.name]: Cascader
-  },
+  components: { LoadingOutlined },
   props: {
     value: {
       type: Array

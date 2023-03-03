@@ -72,8 +72,8 @@ export default defineComponent({
   width: 100%;
   padding: 0 12px 0 20px;
   text-align: right;
-  background-color: #151515;
-  border-top: 1px solid #303030;
+  background-color: #fff;
+  border-top: 1px solid #d9d9d9;
 
   > * {
     margin-right: 8px;

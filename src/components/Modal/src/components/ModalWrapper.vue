@@ -51,7 +51,6 @@ export default defineComponent({
 
     let realHeight = 0
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let stopElResizeFn: Fn = () => {}
 
     useWindowSizeFn(setModalHeight.bind(null, false))
@@ -160,9 +159,7 @@ export default defineComponent({
             : realHeight
         }
         emit('height-change', unref(realHeightRef))
-      } catch (error) {
-        console.log(error)
-      }
+      } catch {}
     }
 
     return { wrapperRef, spinRef, spinStyle, scrollTop, setModalHeight }

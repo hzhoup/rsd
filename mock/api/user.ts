@@ -16,7 +16,6 @@ export default [
     method: 'post',
     response: ({ body }) => {
       const { userName, password } = body
-      console.log(userName, password)
       const checkUser = userList.find(
         user => user.userName === userName && user.password === password
       )

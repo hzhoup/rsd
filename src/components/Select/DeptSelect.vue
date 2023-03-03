@@ -30,7 +30,6 @@ onMounted(async () => {
 })
 
 function selectDept(value) {
-  console.log(value)
   emits('update:value', value)
 }
 </script>

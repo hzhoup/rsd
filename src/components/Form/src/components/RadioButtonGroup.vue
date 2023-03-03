@@ -10,8 +10,8 @@
 <script lang="ts">
 import { useRuleFormItem } from '@/hooks/components/useFormItem'
 import { useAttrs } from '@/hooks/core/useAttrs'
+import { isString } from 'lodash-es'
 import { computed, defineComponent, PropType, ref } from 'vue'
-import { isString } from 'xe-utils'
 
 type OptionsItem = { label: string; value: string | number | boolean; disabled?: boolean }
 type RadioItem = string | OptionsItem

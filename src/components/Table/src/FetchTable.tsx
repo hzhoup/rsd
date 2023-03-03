@@ -11,7 +11,6 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const { slots, attrs, emit } = ctx
-    console.log(props, slots, emit)
 
     const list = ref<Recordable[]>([])
     const xTable = ref<VxeGridInstance>()

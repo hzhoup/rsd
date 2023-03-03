@@ -1,5 +1,5 @@
 <script lang="tsx">
-import BasicHelp from '@/components/Application/src/BasicHelp.vue'
+import { BasicHelp } from '@/components/Application'
 import { getSlot } from '@/utils/common/tsxHelper'
 import { Col, Divider, Form } from 'ant-design-vue'
 import type { ValidationRule } from 'ant-design-vue/lib/form/Form'
@@ -12,7 +12,7 @@ import { useItemLabelWidth } from '../hooks/useLabelWidth'
 import type { FormActionType, FormProps, FormSchema } from '../types/form'
 
 export default defineComponent({
-  name: 'FormItem',
+  name: 'BasicFormItem',
   inheritAttrs: false,
   props: {
     schema: {
@@ -150,7 +150,7 @@ export default defineComponent({
 
       function validator(rule: any, value: any) {
         const msg = rule.message || defaultMsg
-        if (isNil(value)) {
+        if (value === undefined || isNil(value)) {
           // 空值
           return Promise.reject(msg)
         } else if (Array.isArray(value) && value.length === 0) {
@@ -222,7 +222,7 @@ export default defineComponent({
       const characterInx = rules.findIndex(val => val.max)
       if (characterInx !== -1 && !rules[characterInx].validator) {
         rules[characterInx].message =
-          rules[characterInx].message || `字符数应小于${[rules[characterInx].max]}位`
+          rules[characterInx].message || `字符数应小于${rules[characterInx].max}位`
       }
       return rules
     }

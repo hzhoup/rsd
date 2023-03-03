@@ -1,25 +1,24 @@
 <template>
-  <RadioGroup v-model:value="state" button-style="solid" v-bind="attrs">
+  <a-radio-group v-model:value="state" button-style="solid" v-bind="attrs">
     <template v-for="item in getOptions" :key="`${item.value}`">
-      <RadioButton
+      <a-radio-button
         v-if="props.isBtn"
-        :disabled="item.disabled"
         :value="item.value"
+        :disabled="item.disabled"
         @click="handleClick(item)"
       >
         {{ item.label }}
-      </RadioButton>
-      <Radio v-else :disabled="item.disabled" :value="item.value" @click="handleClick(item)">
+      </a-radio-button>
+      <a-radio v-else :disabled="item.disabled" :value="item.value" @click="handleClick(item)">
         {{ item.label }}
-      </Radio>
+      </a-radio>
     </template>
-  </RadioGroup>
+  </a-radio-group>
 </template>
 <script lang="ts">
 import { useRuleFormItem } from '@/hooks/components/useFormItem'
 import { useAttrs } from '@/hooks/core/useAttrs'
 import { propTypes } from '@/utils/propTypes'
-import { Radio } from 'ant-design-vue'
 import { get, isFunction, omit } from 'lodash-es'
 import { computed, defineComponent, PropType, ref, unref, watch, watchEffect } from 'vue'
 
@@ -27,11 +26,6 @@ type OptionsItem = { label: string; value: string | number | boolean; disabled?:
 
 export default defineComponent({
   name: 'ApiRadioGroup',
-  components: {
-    RadioGroup: Radio.Group,
-    RadioButton: Radio.Button,
-    Radio
-  },
   props: {
     api: {
       type: Function as PropType<(arg?: Recordable | string) => Promise<OptionsItem[]>>,
@@ -61,10 +55,8 @@ export default defineComponent({
     const isFirstLoad = ref(true)
     const emitData = ref<any[]>([])
     const attrs = useAttrs()
-
     const [state] = useRuleFormItem(props, 'value', 'change', emitData)
 
-    // Processing options value
     const getOptions = computed(() => {
       const { labelField, valueField, numberToString } = props
 

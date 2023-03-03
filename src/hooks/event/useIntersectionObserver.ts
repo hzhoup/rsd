@@ -15,7 +15,6 @@ export function useIntersectionObserver({
   rootMargin = '0px',
   threshold = 0.1
 }: IntersectionObserverProps) {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   let cleanup = () => {}
   const observer: Ref<Nullable<IntersectionObserver>> = ref(null)
   const stopEffect = watchEffect(() => {

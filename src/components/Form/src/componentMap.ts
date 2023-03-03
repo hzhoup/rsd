@@ -23,7 +23,7 @@ import ApiTransfer from './components/ApiTransfer.vue'
 import ApiTree from './components/ApiTree.vue'
 import ApiTreeSelect from './components/ApiTreeSelect.vue'
 import RadioButtonGroup from './components/RadioButtonGroup.vue'
-import type { ComponentType } from './types'
+import type { ComponentType } from './types/index'
 
 const componentMap = new Map<ComponentType, Component>()
 

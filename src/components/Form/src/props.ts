@@ -7,10 +7,10 @@ import type { ColEx } from './types'
 import type { FieldMapToTime, FormSchema } from './types/form'
 
 export const basicProps = {
-  // model: {
-  //   type: Object as PropType<Recordable>,
-  //   default: () => ({})
-  // },
+  model: {
+    type: Object as PropType<Recordable>,
+    default: () => ({})
+  },
   // 标签宽度  固定宽度
   labelWidth: {
     type: [Number, String] as PropType<number | string>,

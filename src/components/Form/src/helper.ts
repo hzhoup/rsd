@@ -1,8 +1,11 @@
 import { dateUtil } from '@/utils/dateUtils'
 import type { ValidationRule } from 'ant-design-vue/lib/form/Form'
 import { isNumber, isObject } from 'lodash-es'
-import type { ComponentType } from './types'
+import type { ComponentType } from './types/index'
 
+/**
+ * @description: 生成placeholder
+ */
 export function createPlaceholderMessage(component: ComponentType) {
   if (component.includes('Input') || component.includes('Complete')) {
     return '请输入'

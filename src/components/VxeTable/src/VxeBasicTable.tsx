@@ -1,4 +1,6 @@
 // @ts-nocheck
+import { pageQuery } from '@/components/VxeTable/src/queryMethods'
+import { deepMerge } from '@/utils'
 import { extendSlots } from '@/utils/common/tsxHelper'
 import { omit } from 'lodash-es'
 import { computed, defineComponent, ref } from 'vue'
@@ -23,6 +25,7 @@ export default defineComponent({
   props: basicProps,
   emits: basicEmits,
   setup(props, { emit, attrs }) {
+    const instance = getCurrentInstance()
     const tableElRef = ref<VxeGridInstance>()
     const emitEvents: VxeGridEventProps = {}
 
@@ -61,7 +64,19 @@ export default defineComponent({
         ...props
       }
 
-      return propsData
+      const custom = {
+        proxyConfig: {
+          ajax: {
+            query: e => {
+              instance.data.selectRows = []
+              tableElRef.value?.clearCheckboxRow()
+              return pageQuery(e, props.url, props.query)
+            }
+          }
+        }
+      }
+
+      return deepMerge(propsData, custom)
     })
 
     /**
@@ -97,6 +112,20 @@ export default defineComponent({
       ...gridExtendTableMethods
     }
   },
+  data() {
+    return {
+      selectRows: []
+    }
+  },
+  methods: {
+    checked({ $table }) {
+      this.selectRows = $table.getCheckboxRecords()
+    },
+    refresh(flag = true) {
+      if (flag) this.tableElRef?.commitProxy('reload')
+      else this.tableElRef?.commitProxy('query')
+    }
+  },
   render() {
     const { tableClass, tableStyle } = this.$props
 
@@ -107,6 +136,8 @@ export default defineComponent({
           class={`vxe-grid_scrollbar px-6 py-4 ${tableClass}`}
           style={tableStyle}
           {...this.getBindGridValues}
+          onCheckboxAll={this.checked}
+          onCheckboxChange={this.checked}
         >
           {extendSlots(this.$slots)}
         </VxeGrid>

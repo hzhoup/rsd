@@ -1,7 +1,7 @@
 import { useBreakpoint } from '@/hooks/event/useBreakpoint'
 import { useDebounceFn } from '@vueuse/core'
 import { isBoolean, isFunction, isNumber, isObject } from 'lodash-es'
-import type { EmitType } from 'types'
+import { EmitType } from 'types'
 import { computed, ComputedRef, getCurrentInstance, Ref, shallowReactive, unref, watch } from 'vue'
 import type { ColEx } from '../types'
 import type { FormProps, FormSchema } from '../types/form'

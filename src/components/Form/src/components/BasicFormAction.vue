@@ -5,8 +5,7 @@
         <slot name="resetBefore"></slot>
         <a-button
           v-if="showResetButton"
-          class="mr-12"
-          type="default"
+          class="mr-2"
           v-bind="getResetBtnOptions"
           @click="resetAction"
         >
@@ -16,8 +15,8 @@
 
         <a-button
           v-if="showSubmitButton"
-          class="mr-12"
           type="primary"
+          class="mr-2"
           v-bind="getSubmitBtnOptions"
           @click="submitAction"
         >
@@ -27,8 +26,8 @@
         <slot name="advanceBefore"></slot>
         <a-button
           v-if="showAdvancedButton && !hideAdvanceBtn"
-          size="small"
           type="link"
+          size="small"
           @click="toggleAdvanced"
         >
           {{ isAdvanced ? '收起' : '展开' }}
@@ -45,12 +44,12 @@ import { propTypes } from '@/utils/propTypes'
 import type { ButtonProps } from 'ant-design-vue/es/button/buttonTypes'
 import { computed, defineComponent, PropType } from 'vue'
 import { useFormContext } from '../hooks/useFormContext'
-import type { ColEx } from '../types'
+import type { ColEx } from '../types/index'
 
 type ButtonOptions = Partial<ButtonProps> & { text: string }
 
 export default defineComponent({
-  name: 'FormAction',
+  name: 'BasicFormAction',
   components: { BasicArrow },
   props: {
     showActionButtonGroup: propTypes.bool.def(true),

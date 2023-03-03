@@ -76,7 +76,7 @@ export default defineComponent({
 @prefix-cls: ~'rds-collapse-container';
 
 .@{prefix-cls} {
-  background-color: #151515;
+  background-color: #fff;
   border-radius: 2px;
   transition: all 0.3s ease-in-out;
 
@@ -85,11 +85,11 @@ export default defineComponent({
     height: 32px;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #303030;
+    border-bottom: 1px solid #d9d9d9;
   }
 
   &__footer {
-    border-top: 1px solid #303030;
+    border-top: 1px solid #d9d9d9;
   }
 
   &__action {

@@ -7,6 +7,8 @@ import tableProps from 'vxe-table/es/table/src/props'
  */
 export const basicProps = {
   ...tableProps,
+  url: { type: String, required: true },
+  query: { type: Object, default: () => ({}) },
   columns: Array as PropType<VxeGridPropTypes.Columns>,
   pagerConfig: {
     type: Object as PropType<VxeGridPropTypes.PagerConfig>,

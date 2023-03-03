@@ -5,17 +5,18 @@
 </template>
 
 <script lang="ts" setup>
-import { BasicForm } from '@/components/Form'
-import { useForm } from '@/components/Form/src/hooks/useForm'
-import { FormSchema } from '@/components/Form/src/types/form'
+import { BasicForm, FormSchema, useForm } from '@/components/Form'
 import { BasicModal, useModalInner } from '@/components/Modal'
 import { usePost } from '@/hooks/useRequest'
 
+const emits = defineEmits(['refresh', 'register'])
+
 const [register, { setModalProps, closeModal }] = useModalInner(({ id }) => {
-  paramRef.id = id
+  setFieldsValue({ id })
 })
 
 const schemas: FormSchema[] = [
+  { field: 'id', label: 'id', component: 'InputNumber', show: false },
   {
     field: 'newPassword',
     component: 'InputPassword',
@@ -27,7 +28,7 @@ const schemas: FormSchema[] = [
     ]
   }
 ]
-const [registerForm, { validateFields }] = useForm({
+const [registerForm, { validateFields, setFieldsValue }] = useForm({
   labelWidth: 80,
   schemas,
   showActionButtonGroup: false
@@ -44,7 +45,9 @@ async function resetPwd() {
     Object.assign(paramRef, res)
     await execute()
     setModalProps({ confirmLoading: false, loading: false })
-    if (data.value) closeModal()
+    if (!data.value) return
+    closeModal()
+    emits('refresh')
   } catch {}
 }
 </script>

@@ -18,7 +18,7 @@
 
     <ScrollContainer
       v-loading="getLoading"
-      :loading-tip="loadingText || t('common.loadingText')"
+      :loading-tip="loadingText || '加载中...'"
       :style="getScrollContentStyle"
     >
       <slot></slot>
@@ -88,7 +88,7 @@ export default defineComponent({
       const { isDetail, width, wrapClassName, getContainer } = opt
       if (isDetail) {
         if (!width) {
-          opt.width = '100%'
+          opt.width = 'calc(100% - 180px)'
         }
         const detailCls = `${prefixCls}__detail`
         opt.class = wrapClassName ? `${wrapClassName} ${detailCls}` : detailCls
@@ -206,7 +206,7 @@ export default defineComponent({
   .ant-drawer-body {
     height: calc(100% - 56px);
     padding: 0;
-    background-color: #151515;
+    background-color: #fff;
 
     .scrollbar__wrap {
       padding: 16px !important;
@@ -226,7 +226,7 @@ export default defineComponent({
     width: 100%;
     height: 40px;
     padding: 0;
-    border-top: 1px solid #303030;
+    border-top: 1px solid #d9d9d9;
     box-sizing: border-box;
   }
 
