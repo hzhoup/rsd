@@ -4,7 +4,7 @@
     destroy-on-close
     show-footer
     title="配置角色"
-    width="calc(100% - 180px)"
+    :is-detail="true"
     @ok="handleOk"
     @register="registerDrawer"
   >
@@ -170,19 +170,21 @@ const Check3List = ({ name }) => {
 }
 
 const roleId = ref<number>()
-const [registerDrawer, { closeDrawer, changeLoading }] = useDrawerInner(async id => {
-  const { execute, data } = useGet<Recordable[]>('/role/getRoleMenuIds', { roleId: id })
-  await execute()
-  if (!unref(data)) return
-  data.value?.forEach(item => {
-    const row = find(unref(tableData.value), row => row.id3 === item.menuId)
-    if (isNil(row)) return
-    check3ChangeEvent(row, true)
-    check4ChangeEvent({ target: { value: item.dataType } }, row)
-  })
-  roleId.value = id
-  changeLoading(false)
-})
+const [registerDrawer, { closeDrawer, changeLoading, setDrawerProps }] = useDrawerInner(
+  async id => {
+    const { execute, data } = useGet<Recordable[]>('/role/getRoleMenuIds', { roleId: id })
+    await execute()
+    if (!unref(data)) return
+    data.value?.forEach(item => {
+      const row = find(unref(tableData.value), row => row.id3 === item.menuId)
+      if (isNil(row)) return
+      check3ChangeEvent(row, true)
+      check4ChangeEvent({ target: { value: item.dataType } }, row)
+    })
+    roleId.value = id
+    changeLoading(false)
+  }
+)
 
 const rowspanMethod = ({ row, _rowIndex, column, visibleData }) => {
   const fields = ['name1', 'name2']
@@ -242,7 +244,7 @@ function closeFunc() {
 
 async function handleOk() {
   try {
-    changeLoading(true)
+    setDrawerProps({ loading: true, confirmLoading: true })
     const list: Recordable[] = []
     for (const row of tableData.value) {
       if (row.check3) list.push({ menuId: row.id3, dataType: row.check4 })
@@ -254,7 +256,7 @@ async function handleOk() {
     closeDrawer()
     emits('refresh')
   } finally {
-    changeLoading(false)
+    setDrawerProps({ loading: false, confirmLoading: false })
   }
 }
 </script>

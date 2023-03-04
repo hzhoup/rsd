@@ -13,7 +13,7 @@ export const footerProps = {
    */
   showOkBtn: { type: Boolean, default: true },
   okButtonProps: Object as PropType<Recordable>,
-  okText: { type: String, default: '确认' },
+  okText: { type: String, default: '提交' },
   okType: { type: String, default: 'primary' },
   showFooter: { type: Boolean },
   footerHeight: {

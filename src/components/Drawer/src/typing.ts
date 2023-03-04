@@ -1,4 +1,4 @@
-import type { ScrollContainerOptions } from '@/components/Container/src/typing'
+import type { ScrollContainerOptions } from '@/components/Container'
 import type { ButtonProps } from 'ant-design-vue/lib/button/buttonTypes'
 import type { ComputedRef, CSSProperties, VNodeChild } from 'vue'
 
@@ -52,14 +52,12 @@ export interface DrawerFooterProps {
    * The ok button props, follow jsx rules
    * @type object
    */
-  // eslint-disable-next-line @typescript-eslint/ban-types
   okButtonProps: { props: ButtonProps; on: {} }
 
   /**
    * The cancel button props, follow jsx rules
    * @type object
    */
-  // eslint-disable-next-line @typescript-eslint/ban-types
   cancelButtonProps: { props: ButtonProps; on: {} }
   /**
    * Whether to apply loading visual effect for OK button or not
@@ -71,7 +69,6 @@ export interface DrawerFooterProps {
   showFooter: boolean
   footerHeight: string | number
 }
-
 export interface DrawerProps extends DrawerFooterProps {
   isDetail?: boolean
   loading?: boolean
@@ -189,7 +186,6 @@ export interface DrawerProps extends DrawerFooterProps {
    */
   onClose?: (e?: Event) => void
 }
-
 export interface DrawerActionType {
   scrollBottom: () => void
   scrollTo: (to: number) => void

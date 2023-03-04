@@ -8,10 +8,10 @@
       <slot name="centerFooter"></slot>
       <a-button
         v-if="showOkBtn"
-        :loading="confirmLoading"
         :type="okType"
-        class="mr-2"
         v-bind="okButtonProps"
+        :loading="confirmLoading"
+        class="mr-2"
         @click="handleOk"
       >
         {{ okText }}
@@ -57,7 +57,6 @@ export default defineComponent({
     function handleClose() {
       emit('close')
     }
-
     return { handleOk, prefixCls, handleClose, getStyle }
   }
 })

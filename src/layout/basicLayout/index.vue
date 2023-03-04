@@ -6,7 +6,10 @@
       <a-layout class="ml-1">
         <div class="h-48"></div>
         <!--        <LayoutBreadcrumb />-->
-        <a-layout-content class="relative !flex-1" style="min-height: calc(100vh - 48px)">
+        <a-layout-content
+          class="rds-layout-content relative !flex-1"
+          style="min-height: calc(100vh - 48px)"
+        >
           <AppContent />
         </a-layout-content>
       </a-layout>

@@ -40,8 +40,8 @@ import { useDrawer } from '@/components/Drawer'
 import { useModal } from '@/components/Modal'
 import { BasicTableProps, VxeBasicInstance } from '@/components/VxeTable'
 import VxeBasicTable from '@/components/VxeTable/src/VxeBasicTable'
-import RoleConfigDrawer from '@/views/sys/RoleManage/modules/RoleConfigDrawer.vue'
-import SaveRoleModal from '@/views/sys/RoleManage/modules/SaveRoleModal.vue'
+import RoleConfigDrawer from './modules/RoleConfigDrawer.vue'
+import SaveRoleModal from './modules/SaveRoleModal.vue'
 
 const tableRef = ref<VxeBasicInstance>()
 

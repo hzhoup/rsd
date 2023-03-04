@@ -1,6 +1,6 @@
 <template>
   <BasicModal destroy-on-close title="角色管理" @ok="saveUser" @register="registerModal">
-    <BasicForm auto-focus-first-item @register="registerForm" />
+    <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
 
@@ -44,7 +44,10 @@ const [registerForm, { validateFields, setFieldsValue }] = useForm({
   schemas,
   labelWidth: 80,
   rowProps: { gutter: 16 },
-  showActionButtonGroup: false
+  autoSubmitOnEnter: true,
+  autoFocusFirstItem: true,
+  showActionButtonGroup: false,
+  submitFunc: saveUser
 })
 
 async function saveUser() {
@@ -55,7 +58,7 @@ async function saveUser() {
     setModalProps({ confirmLoading: true, loading: true })
     await execute()
     setModalProps({ confirmLoading: false, loading: false })
-    if (!data.value) return
+    if (!unref(data)) return
     closeModal()
     createMessage.success('操作成功')
     emits('refresh')

@@ -1,98 +1,122 @@
 <template>
   <a-card>
-    <div class="mb-12">
-      <a-form :model="formData" layout="inline">
-        <a-form-item label="部门名称" name="menuName">
-          <a-input
-            v-model:value="formData.deptName"
-            class="!w-200"
-            placeholder="部门名称"
-            @keyup.enter="refresh(true)"
-          />
-        </a-form-item>
-        <a-form-item>
-          <a-space>
-            <a-button type="primary" @click="refresh(true)">查询</a-button>
-            <a-button type="primary" @click="saveDept(null)">添加</a-button>
-          </a-space>
-        </a-form-item>
-      </a-form>
-    </div>
-    <a-table
-      :data-source="list"
-      :loading="loading"
-      :pagination="false"
-      :row-key="record => record.id"
-      :scroll="{ scrollToFirstRowOnChange: true, x: '100%' }"
-      default-expand-all-rows
-      size="middle"
-      @change="handleTableChange"
-    >
-      <a-table-column
-        key="deptName"
-        :resizable="true"
-        :sorter="true"
-        :width="140"
-        data-index="deptName"
-        fixed="left"
-        title="部门名称"
-      />
-      <a-table-column
-        key="masterNames"
-        :resizable="true"
-        :sorter="true"
-        :width="120"
-        data-index="masterNames"
-        title="负责人"
-      />
-      <a-table-column
-        key="remark"
-        :ellipsis="{ showTitle: true }"
-        :resizable="true"
-        :sorter="true"
-        :width="180"
-        data-index="remark"
-        title="备注"
-      />
-      <a-table-column :width="120" fixed="right" title="操作">
-        <template #default="{ record }">
-          <a-space>
-            <a-button v-if="record.parentId !== -1" type="link" @click="saveDept(record)">
-              编辑
-            </a-button>
-            <a-button type="link">用户列表</a-button>
-            <a-popconfirm
-              :title="`是否确认删除`"
-              placement="left"
-              @confirm="deleteSingle('/dept/delete', { id: record.id }, () => refresh(true))"
-            >
-              <a-button v-if="record.parentId !== -1" type="link">删除</a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table-column>
-    </a-table>
-    <DeptManageModal ref="deptManageModal" @refresh="refresh(true)" />
+    <vxe-grid ref="tableRef" v-bind="gridOptions" @checkbox-change="selectDept">
+      <template #toolbtns>
+        <a-space>
+          <a-button type="primary">添加部门</a-button>
+          <a-button :disabled="selectRows.length !== 1" type="primary" @click="deleteDept">
+            删除
+          </a-button>
+        </a-space>
+      </template>
+      <template #action="{ row }">
+        <a-button type="link">{{ row.deptName }}</a-button>
+      </template>
+    </vxe-grid>
   </a-card>
 </template>
 
 <script lang="ts" setup>
-import { deleteSingle } from '@/hooks/useFixHttp'
-import { useTable } from '@/hooks/useTable'
-import DeptManageModal from './modules/DeptManageModal.vue'
+import { deleteSigneConfirm } from '@/api/common/delete'
+import { BasicTableProps, VxeBasicInstance } from '@/components/VxeTable'
+import { useGet } from '@/hooks/useRequest'
+import XEUtils from 'xe-utils'
 
 defineOptions({ name: 'MenuManage' })
 
-const formData = reactive({})
-const { loading, list, handleTableChange, refresh } = useTable({
-  url: '/dept/getList',
-  params: formData,
-  hasPag: false
+const tableRef = ref<VxeBasicInstance>()
+
+function refresh() {
+  tableRef.value?.commitProxy('reload')
+  selectRows.value = []
+}
+
+const selectRows = ref<Recordable[]>([])
+function selectDept({ $table }) {
+  selectRows.value = $table.getCheckboxRecords()
+}
+
+const gridOptions = reactive<BasicTableProps>({
+  id: 'MenuManageTable',
+  border: 'inner',
+  toolbarConfig: {
+    slots: { buttons: 'toolbtns' }
+  },
+  checkboxConfig: { checkStrictly: true },
+  treeConfig: {
+    rowField: 'id',
+    transform: true,
+    parentField: 'parentId'
+  },
+  columns: [
+    { type: 'checkbox', width: 60, align: 'center', fixed: 'left' },
+    {
+      treeNode: true,
+      field: 'deptName',
+      title: '部门名称',
+      slots: { default: 'action' }
+    },
+    {
+      field: 'masterNames',
+      title: '负责人'
+    },
+    { field: 'remark', title: '备注' }
+  ],
+  formConfig: {
+    enabled: true,
+    items: [
+      {
+        field: 'deptName',
+        title: '部门名称',
+        itemRender: {
+          name: 'AInput'
+        },
+        span: 6
+      },
+      {
+        span: 18,
+        align: 'right',
+        className: '!pr-0',
+        itemRender: {
+          name: 'AButtonGroup',
+          children: [
+            {
+              props: { type: 'primary', content: '查询', htmlType: 'submit' },
+              attrs: { class: 'mr-8' }
+            },
+            { props: { type: 'default', htmlType: 'reset', content: '重置' } }
+          ]
+        }
+      }
+    ]
+  },
+  proxyConfig: {
+    ajax: {
+      query: ({ form, sort }) => {
+        return new Promise(async resolve => {
+          const params = Object.assign({}, form)
+          if (sort.field) {
+            params.field = sort.field
+            params.order = sort.order
+          }
+          const { execute, data } = useGet('/dept/getList', params)
+          await execute()
+          if (!unref(data)) return resolve([])
+          const list = XEUtils.toTreeArray(unref(data), { clear: true })
+          return resolve(list)
+        })
+      }
+    }
+  }
 })
 
-const deptManageModal = ref()
-
-function saveDept(record) {
-  deptManageModal.value?.open(record)
+const deleteDept = () => {
+  const title = `部门【${selectRows.value[0].deptName}】`
+  return deleteSigneConfirm({
+    title,
+    prefix: 'dept',
+    id: selectRows.value[0].id,
+    afterDeleteFn: refresh
+  })
 }
 </script>

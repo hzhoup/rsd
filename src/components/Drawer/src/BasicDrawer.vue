@@ -1,10 +1,10 @@
 <template>
-  <a-drawer :class="prefixCls" v-bind="getBindValues" @close="onClose">
+  <Drawer :class="prefixCls" v-bind="getBindValues" @close="onClose">
     <template v-if="!$slots.title" #title>
       <DrawerHeader
+        :title="getMergeProps.title"
         :is-detail="isDetail"
         :show-detail-back="showDetailBack"
-        :title="getMergeProps.title"
         @close="onClose"
       >
         <template #titleToolbar>
@@ -18,8 +18,8 @@
 
     <ScrollContainer
       v-loading="getLoading"
-      :loading-tip="loadingText || '加载中...'"
       :style="getScrollContentStyle"
+      :loading-tip="loadingText || '加载中...'"
     >
       <slot></slot>
     </ScrollContainer>
@@ -28,12 +28,13 @@
         <slot :name="item" v-bind="data || {}"></slot>
       </template>
     </DrawerFooter>
-  </a-drawer>
+  </Drawer>
 </template>
 <script lang="ts">
-import ScrollContainer from '@/components/Container/src/ScrollContainer.vue'
+import { ScrollContainer } from '@/components/Container'
 import { useAttrs } from '@/hooks/core/useAttrs'
 import { deepMerge } from '@/utils'
+import { Drawer } from 'ant-design-vue'
 import { isFunction, isNumber } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
@@ -51,11 +52,11 @@ import DrawerHeader from './components/DrawerHeader.vue'
 import { basicProps } from './props'
 import type { DrawerInstance, DrawerProps } from './typing'
 
-const prefixVar = 'rds-'
+const prefixVar = 'rds'
 const prefixCls = 'rds-basic-drawer'
 
 export default defineComponent({
-  components: { ScrollContainer, DrawerFooter, DrawerHeader },
+  components: { Drawer, ScrollContainer, DrawerFooter, DrawerHeader },
   inheritAttrs: false,
   props: basicProps,
   emits: ['visible-change', 'ok', 'close', 'register'],
@@ -88,13 +89,12 @@ export default defineComponent({
       const { isDetail, width, wrapClassName, getContainer } = opt
       if (isDetail) {
         if (!width) {
-          opt.width = 'calc(100% - 180px)'
+          opt.width = '100%'
         }
         const detailCls = `${prefixCls}__detail`
         opt.class = wrapClassName ? `${wrapClassName} ${detailCls}` : detailCls
 
         if (!getContainer) {
-          // TODO type error?
           opt.getContainer = `.${prefixVar}-layout-content` as any
         }
       }
@@ -102,13 +102,9 @@ export default defineComponent({
     })
 
     const getBindValues = computed((): DrawerProps => {
-      return {
-        ...attrs,
-        ...unref(getProps)
-      }
+      return { ...attrs, ...unref(getProps) }
     })
 
-    // Custom implementation of the bottom button,
     const getFooterHeight = computed(() => {
       const { footerHeight, showFooter } = unref(getProps)
       if (showFooter && footerHeight) {
@@ -147,7 +143,6 @@ export default defineComponent({
       }
     )
 
-    // Cancel event
     async function onClose(e: Recordable) {
       const { closeFunc } = unref(getProps)
       emit('close', e)
@@ -160,7 +155,6 @@ export default defineComponent({
     }
 
     function setDrawerProps(props: Partial<DrawerProps>): void {
-      // Keep the last setDrawerProps
       propsRef.value = deepMerge(unref(propsRef) || ({} as any), props)
 
       if (Reflect.has(props, 'visible')) {
@@ -187,8 +181,6 @@ export default defineComponent({
 })
 </script>
 <style lang="less">
-@header-height: 60px;
-@detail-header-height: 40px;
 @prefix-cls: ~'rds-basic-drawer';
 @prefix-cls-detail: ~'rds-basic-drawer__detail';
 
@@ -236,6 +228,7 @@ export default defineComponent({
 
   .ant-drawer-close {
     height: 40px;
+    width: 40px;
     line-height: 40px;
   }
 

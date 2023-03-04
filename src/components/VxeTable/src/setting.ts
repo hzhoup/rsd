@@ -2,7 +2,7 @@ import { VXETable } from 'vxe-table'
 
 VXETable.setup({
   table: {
-    checkboxConfig: { checkField: 'checked', range: true },
+    checkboxConfig: { checkField: 'checked' },
     headerAlign: 'center',
     showOverflow: 'tooltip',
     border: true,
