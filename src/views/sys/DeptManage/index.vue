@@ -7,6 +7,9 @@
           <a-button :disabled="selectRows.length !== 1" type="primary" @click="deleteDept">
             删除
           </a-button>
+          <a-button :disabled="selectRows.length !== 1" type="primary" @click="deleteDept">
+            用户列表
+          </a-button>
         </a-space>
       </template>
       <template #action="{ row }">
